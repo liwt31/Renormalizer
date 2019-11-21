@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>renormalizer.mps.mp &mdash; Renormalizer 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Renormalizer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. An overview of Renormalizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">3. Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spectrum.html">4. spectra: absorption/emission spectrum at zero/finite temperature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ct.html">5. Charge Transport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cv.html">6. Frequency domain DMRG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">7. lib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sbm.html">8. sbm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configs.html">9. Calculation Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mps.html">10. Low Level Data Structure and Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model.html">11. model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">12. some self-built tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop.html">13. How to develop Renormalizer</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Renormalizer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>renormalizer.mps.mp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for renormalizer.mps.mp</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Author: Jiajun Ren &lt;jiajunren0522@gmail.com&gt;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">renormalizer.model</span> <span class="k">import</span> <span class="n">MolList</span><span class="p">,</span> <span class="n">EphTable</span>
+<span class="kn">from</span> <span class="nn">renormalizer.mps</span> <span class="k">import</span> <span class="n">svd_qn</span>
+<span class="kn">from</span> <span class="nn">renormalizer.mps.matrix</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">einsum</span><span class="p">,</span>
+    <span class="n">eye</span><span class="p">,</span>
+    <span class="n">allclose</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">,</span>
+    <span class="n">vstack</span><span class="p">,</span>
+    <span class="n">dstack</span><span class="p">,</span>
+    <span class="n">concatenate</span><span class="p">,</span>
+    <span class="n">zeros</span><span class="p">,</span>
+    <span class="n">tensordot</span><span class="p">,</span>
+    <span class="n">Matrix</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">renormalizer.utils</span> <span class="k">import</span> <span class="n">sizeof_fmt</span><span class="p">,</span> <span class="n">CompressConfig</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MatrixProduct</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># XXX: when modify theses codes, keep in mind to update `metacopy` method</span>
+        <span class="c1"># set to a list of None upon metacopy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Matrix</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">real_dtype</span>
+
+        <span class="c1"># in mpo.quasi_boson, mol_list is not set, then _ephtable and _pbond_list should be used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mol_list</span><span class="p">:</span> <span class="n">MolList</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ephtable</span><span class="p">:</span> <span class="n">EphTable</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># mpo also need to be compressed sometimes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="p">:</span> <span class="n">CompressConfig</span> <span class="o">=</span> <span class="n">CompressConfig</span><span class="p">()</span>
+
+        <span class="c1"># QN related</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy_qn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># self.use_dummy_qn = True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qntot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># if sweeping to right: True else False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># compress after add?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compress_add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">site_num</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mol_num</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol_list</span><span class="o">.</span><span class="n">mol_num</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">threshold</span>
+
+    <span class="nd">@threshold</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_mps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_mpo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_mpdm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">backend</span><span class="o">.</span><span class="n">complex_dtype</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bond_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="n">bond_dims</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[</span><span class="n">mt</span><span class="o">.</span><span class="n">bond_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">mt</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bond_dim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span>
+            <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="c1"># return a list so that the logging result is more pretty</span>
+        <span class="k">return</span> <span class="n">bond_dims</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bond_dims_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bond_dims</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ephtable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ephtable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ephtable</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol_list</span><span class="o">.</span><span class="n">ephtable</span>
+
+    <span class="nd">@ephtable</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">ephtable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ephtable</span><span class="p">:</span> <span class="n">EphTable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ephtable</span> <span class="o">=</span> <span class="n">ephtable</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pbond_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol_list</span><span class="o">.</span><span class="n">pbond_list</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span>
+
+    <span class="nd">@pbond_list</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">pbond_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pbond_list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span> <span class="o">=</span> <span class="n">pbond_list</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qntot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy_qn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qntot</span>
+
+    <span class="nd">@qntot</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">qntot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qntot</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy_qn</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_qntot</span> <span class="o">=</span> <span class="n">qntot</span>
+
+    <span class="k">def</span> <span class="nf">build_empty_qn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># retain qnidx to indicate left or right canonicalise</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qn</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_dims</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">build_none_qn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">clear_qn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qn</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_dims</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">move_qnidx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dstidx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantum number has a boundary site, left hand of the site is L system qn,</span>
+<span class="sd">        right hand of the side is R system qn, the sum of quantum number of L system</span>
+<span class="sd">        and R system is tot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># construct the L system qn</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span>
+
+        <span class="c1"># set boundary to fsite:</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dstidx</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="n">dstidx</span>
+
+    <span class="k">def</span> <span class="nf">check_left_canonical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check L-canonical</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">mt</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mt</span><span class="o">.</span><span class="n">check_lortho</span><span class="p">(</span><span class="n">rtol</span><span class="p">,</span> <span class="n">atol</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">check_right_canonical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check R-canonical</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">mt</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mt</span><span class="o">.</span><span class="n">check_rortho</span><span class="p">(</span><span class="n">rtol</span><span class="p">,</span> <span class="n">atol</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_left_canon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check the qn center in the L-canonical structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_right_canon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check the qn center in the R-canonical structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">ensure_left_canon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_left_canonical</span><span class="p">(</span><span class="n">rtol</span><span class="p">,</span> <span class="n">atol</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move_qnidx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canonicalise</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">iter_idx_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">stop_idx</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># if not `full`, the last site is omitted.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stop_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="n">stop_idx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="k">if</span> <span class="n">full</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stop_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="n">stop_idx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">full</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_ms</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">vt</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qnlset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qnrset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">m_trunc</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">m_trunc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">m_trunc</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m_trunc</span><span class="p">]</span>
+        <span class="n">vt</span> <span class="o">=</span> <span class="n">vt</span><span class="p">[:</span><span class="n">m_trunc</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># canonicalise, vt is not unitary</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+                    <span class="n">norm</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+                    <span class="n">u</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">array</span> <span class="o">*</span> <span class="n">norm</span><span class="p">)</span>
+                    <span class="n">vt</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">vt</span><span class="o">.</span><span class="n">array</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">norm</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+                    <span class="n">u</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">array</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
+                    <span class="n">vt</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">vt</span><span class="o">.</span><span class="n">array</span> <span class="o">*</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">[:</span><span class="n">m_trunc</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">):</span>
+                <span class="n">vt</span> <span class="o">=</span> <span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;i, ij -&gt; ij&quot;</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">vt</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ji, i -&gt; ji&quot;</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tensordot</span><span class="p">(</span><span class="n">vt</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ret_mpsi</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">pdim_prod</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">pdim</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">m_trunc</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">qnlset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">qnlset</span><span class="p">[:</span><span class="n">m_trunc</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tensordot</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">u</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ret_mpsi</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">m_trunc</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">pdim</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">vt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">pdim_prod</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">qnrset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">qnrset</span><span class="p">[:</span><span class="n">m_trunc</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">ret_mpsi</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&lt;</span> <span class="n">ret_mpsi</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="c1"># do copy here to discard unnecessary data. Note that in NumPy common slicing returns</span>
+            <span class="c1"># a `view` containing the original data. If `ret_mpsi` is used directly the original</span>
+            <span class="c1"># `u` or `vt` is not garbage collected.</span>
+            <span class="n">ret_mpsi</span> <span class="o">=</span> <span class="n">ret_mpsi</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">ret_mpsi</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ret_mpsi</span>
+
+    <span class="k">def</span> <span class="nf">_switch_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># assert self.check_left_canonical()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># assert self.check_right_canonical()</span>
+
+    <span class="k">def</span> <span class="nf">_get_big_qn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="n">mt</span><span class="p">:</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">sigmaqn</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">sigmaqn</span>
+        <span class="n">qnl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">qnr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">qnl</span><span class="p">)</span> <span class="o">==</span> <span class="n">mt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">qnr</span><span class="p">)</span> <span class="o">==</span> <span class="n">mt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigmaqn</span><span class="p">)</span> <span class="o">==</span> <span class="n">mt</span><span class="o">.</span><span class="n">pdim_prod</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+            <span class="n">qnbigl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">qnl</span><span class="p">,</span> <span class="n">sigmaqn</span><span class="p">)</span>
+            <span class="n">qnbigr</span> <span class="o">=</span> <span class="n">qnr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">qnbigl</span> <span class="o">=</span> <span class="n">qnl</span>
+            <span class="n">qnbigr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">sigmaqn</span><span class="p">,</span> <span class="n">qnr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qnbigl</span><span class="p">,</span> <span class="n">qnbigr</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MatrixProduct&quot;</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">qntot</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">site_num</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">qnidx</span>
+
+        <span class="c1"># sometimes `other` is complex and `self` is real</span>
+        <span class="n">new_mps</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">metacopy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complex</span><span class="p">:</span>
+            <span class="n">new_mps</span><span class="o">.</span><span class="n">to_complex</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mps</span><span class="p">:</span>  <span class="c1"># MPS</span>
+            <span class="n">new_mps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dstack</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">mta</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">mtb</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">pdim</span> <span class="o">=</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">pdim</span> <span class="o">==</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">new_ms</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pdim</span><span class="p">,</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">new_mps</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">new_ms</span><span class="p">[:</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:,</span> <span class="p">:</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mta</span>
+                <span class="n">new_ms</span><span class="p">[</span><span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mtb</span>
+                <span class="n">new_mps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_ms</span>
+
+            <span class="n">new_mps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpdm</span><span class="p">:</span>  <span class="c1"># MPO</span>
+            <span class="n">new_mps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">mta</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">mtb</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">pdimu</span> <span class="o">=</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">pdimd</span> <span class="o">=</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">pdimu</span> <span class="o">==</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">pdimd</span> <span class="o">==</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">new_ms</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">pdimu</span><span class="p">,</span>
+                        <span class="n">pdimd</span><span class="p">,</span>
+                        <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">mtb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="p">],</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">new_mps</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">new_ms</span><span class="p">[:</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mta</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+                <span class="n">new_ms</span><span class="p">[</span><span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">mta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mtb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+                <span class="n">new_mps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_ms</span>
+
+            <span class="n">new_mps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span>
+
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">move_qnidx</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">)</span>
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span>
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">qn</span> <span class="o">=</span> <span class="p">[</span><span class="n">qn1</span> <span class="o">+</span> <span class="n">qn2</span> <span class="k">for</span> <span class="n">qn1</span><span class="p">,</span> <span class="n">qn2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">,</span> <span class="n">new_mps</span><span class="o">.</span><span class="n">qn</span><span class="p">)]</span>
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_mps</span><span class="o">.</span><span class="n">qn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_add</span><span class="p">:</span>
+            <span class="n">new_mps</span><span class="o">.</span><span class="n">canonicalise</span><span class="p">()</span>
+            <span class="n">new_mps</span><span class="o">.</span><span class="n">compress</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_mps</span>
+
+    <span class="k">def</span> <span class="nf">compress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_m_trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        inp: canonicalise MPS (or MPO)</span>
+
+<span class="sd">        side=&#39;l&#39;: compress LEFT-canonicalised MPS</span>
+<span class="sd">                  by sweeping from RIGHT to LEFT</span>
+<span class="sd">                  output MPS is right canonicalised i.e. CRRR</span>
+
+<span class="sd">        side=&#39;r&#39;: reverse of &#39;l&#39;</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">             truncated MPS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">bonddim_should_set</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">set_bonddim</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># used for logging at exit</span>
+        <span class="n">sz_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_bytes</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span><span class="p">:</span>
+            <span class="c1"># ensure mps is canonicalised. This is time consuming.</span>
+            <span class="c1"># to disable this, run python as `python -O`</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_left_canon</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_left_canonical</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_right_canonical</span><span class="p">()</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="k">else</span> <span class="s2">&quot;R&quot;</span>
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_idx_list</span><span class="p">(</span><span class="n">full</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">mt</span><span class="p">:</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">l_combine</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">r_combine</span><span class="p">()</span>
+            <span class="n">qnbigl</span><span class="p">,</span> <span class="n">qnbigr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_big_qn</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">qnlset</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">qnrset</span> <span class="o">=</span> <span class="n">svd_qn</span><span class="o">.</span><span class="n">Csvd</span><span class="p">(</span>
+                <span class="n">mt</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">(),</span>
+                <span class="n">qnbigl</span><span class="p">,</span>
+                <span class="n">qnbigr</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span><span class="p">,</span>
+                <span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span>
+                <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">vt</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">if</span> <span class="n">temp_m_trunc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">m_trunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">compute_m_trunc</span><span class="p">(</span>
+                    <span class="n">sigma</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">m_trunc</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">temp_m_trunc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sigma</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ms</span><span class="p">(</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">vt</span><span class="p">),</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">sigma</span><span class="p">),</span> <span class="n">qnlset</span><span class="p">,</span> <span class="n">qnrset</span><span class="p">,</span> <span class="n">m_trunc</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_switch_direction</span><span class="p">()</span>
+        <span class="n">compress_ratio</span> <span class="o">=</span> <span class="n">sz_before</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_bytes</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;size before/after compress: {sizeof_fmt(sz_before)}/{sizeof_fmt(self.total_bytes)}, ratio: </span><span class="si">{compress_ratio}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">canonicalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_idx</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># stop_idx: mix canonical site at `stop_idx`</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_idx_list</span><span class="p">(</span><span class="n">full</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stop_idx</span><span class="o">=</span><span class="n">stop_idx</span><span class="p">):</span>
+            <span class="n">mt</span><span class="p">:</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">mt</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">l_combine</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">r_combine</span><span class="p">()</span>
+            <span class="n">qnbigl</span><span class="p">,</span> <span class="n">qnbigr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_big_qn</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="k">else</span> <span class="s2">&quot;R&quot;</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">qnlset</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">qnrset</span> <span class="o">=</span> <span class="n">svd_qn</span><span class="o">.</span><span class="n">Csvd</span><span class="p">(</span>
+                <span class="n">mt</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">(),</span>
+                <span class="n">qnbigl</span><span class="p">,</span>
+                <span class="n">qnbigr</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span><span class="p">,</span>
+                <span class="n">QR</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span>
+                <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ms</span><span class="p">(</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qnlset</span><span class="o">=</span><span class="n">qnlset</span><span class="p">,</span> <span class="n">qnrset</span><span class="o">=</span><span class="n">qnrset</span>
+            <span class="p">)</span>
+        <span class="c1"># can&#39;t iter to idx == 0 or idx == self.site_num - 1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_right</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_num</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_switch_direction</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">conj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        complex conjugate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metacopy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">mt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">new_mp</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_mp</span>
+
+    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        dot product of two mps / mpo </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">e0</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># for debugging. It has little computational cost anyway</span>
+        <span class="n">debug_t</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="c1"># sum_x e0[:,x].m[x,:,:]</span>
+            <span class="n">debug_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e0</span><span class="p">)</span>
+            <span class="n">e0</span> <span class="o">=</span> <span class="n">tensordot</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">mt2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># sum_ij e0[i,p,:] self[i,p,:]</span>
+            <span class="c1"># note, need to flip a (:) index onto top,</span>
+            <span class="c1"># therefore take transpose</span>
+            <span class="k">if</span> <span class="n">mt1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">e0</span> <span class="o">=</span> <span class="n">tensordot</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">mt1</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">elif</span> <span class="n">mt1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">e0</span> <span class="o">=</span> <span class="n">tensordot</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span> <span class="n">mt1</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">e0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">new_mp</span> <span class="o">=</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">inplace</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># np.iscomplex regards 1+0j as non complex while np.iscomplexobj</span>
+        <span class="c1"># regards 1+0j as complex. The former is the desired behavior</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplex</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">new_mp</span><span class="o">.</span><span class="n">to_complex</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># no need to care about negative because no `abs` will be done</span>
+            <span class="n">negative</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">real</span>
+            <span class="n">negative</span> <span class="o">=</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="c1"># Note matrices are read-only</span>
+        <span class="c1"># there are two ways to do the scaling</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="c1"># Thr first way. The operation performs very quickly,</span>
+            <span class="c1"># but leads to high float point error when val is very large or small</span>
+            <span class="c1"># val = 2 is considered as very large because the normalization can</span>
+            <span class="c1"># be done successively</span>
+            <span class="k">assert</span> <span class="n">new_mp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+            <span class="n">new_mp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_mp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span><span class="p">]</span> <span class="o">*</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The second way. High time complexity but numerically more feasible.</span>
+            <span class="n">root_val</span> <span class="o">=</span> <span class="n">val</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">mt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="n">new_mp</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt</span> <span class="o">*</span> <span class="n">root_val</span>
+        <span class="k">if</span> <span class="n">negative</span><span class="p">:</span>
+            <span class="n">new_mp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">new_mp</span>
+
+    <span class="k">def</span> <span class="nf">to_complex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">new_mp</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_mp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metacopy</span><span class="p">()</span>
+        <span class="n">new_mp</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">complex_dtype</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">mt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># dummy mt after metacopy. Bad idea. Remove the dummy thing when feasible</span>
+                <span class="k">continue</span>
+            <span class="n">new_mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">to_complex</span><span class="p">(</span><span class="n">inplace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_mp</span>
+
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">l1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> 
+        <span class="n">l2</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">l1dotl2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">dis_square</span> <span class="o">=</span> <span class="p">(</span><span class="n">l1</span> <span class="o">+</span> <span class="n">l2</span>
+            <span class="o">-</span> <span class="n">l1dotl2</span>
+            <span class="o">-</span> <span class="n">l1dotl2</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span><span class="o">.</span><span class="n">real</span> 
+        
+        <span class="k">if</span> <span class="n">dis_square</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">dis_square</span><span class="o">/</span><span class="n">l1</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dis_square</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metacopy</span><span class="p">()</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_mp</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">new</span>
+
+    <span class="c1"># only (shalow) copy metadata because usually after been copied the real data is overwritten</span>
+    <span class="k">def</span> <span class="nf">metacopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MatrixProduct&quot;</span><span class="p">:</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_mp</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">mol_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol_list</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_ephtable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ephtable</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_pbond_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pbond_list</span>
+        <span class="c1"># need to deep copy compress_config because threshold might change dynamically</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">compress_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">peak_bytes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">use_dummy_qn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy_qn</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">qn</span> <span class="o">=</span> <span class="p">[</span><span class="n">qn</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">qn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">qn</span><span class="p">]</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">qnidx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnidx</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">_qntot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qntot</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">to_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_right</span>
+        <span class="n">new</span><span class="o">.</span><span class="n">compress_add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_add</span>
+        <span class="k">return</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">_array2mt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">Matrix</span><span class="p">):</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="n">Matrix</span><span class="o">.</span><span class="n">interned</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mpo</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy_qn</span><span class="p">:</span>
+            <span class="n">mt</span><span class="o">.</span><span class="n">sigmaqn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">pdim_prod</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mt</span><span class="o">.</span><span class="n">sigmaqn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sigmaqn</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mt</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">nbytes</span> <span class="k">for</span> <span class="n">array</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_sigmaqn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">get_sigmaqn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">sigmaqn</span>
+
+    <span class="k">def</span> <span class="nf">set_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compress_config</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> with </span><span class="si">%d</span><span class="s2"> sites&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="n">new_mt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_array2mt</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_mt</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MatrixProduct&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;MatrixProduct&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="n">new_mt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_array2mt</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_mt</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mp</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Shuaigroup
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

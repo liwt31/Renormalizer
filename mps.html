@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10. Low Level Data Structure and Algorithms &mdash; Renormalizer 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="11. model" href="model.html" />
+    <link rel="prev" title="9. Calculation Configurations" href="configs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Renormalizer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. An overview of Renormalizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum.html">4. spectra: absorption/emission spectrum at zero/finite temperature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ct.html">5. Charge Transport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv.html">6. Frequency domain DMRG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">7. lib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sbm.html">8. sbm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">9. Calculation Configurations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Low Level Data Structure and Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#matrix-product-state-mps">10.1. Matrix Product State (MPS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matrix-product-operator-mpo">10.2. Matrix Product Operator (MPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matrix-product-density-matrix-mpdm">10.3. Matrix Product Density Matrix (MPDM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-renormalizer.mps.thermalprop">10.4. Thermal Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">11. model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">12. some self-built tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="develop.html">13. How to develop Renormalizer</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Renormalizer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>10. Low Level Data Structure and Algorithms</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/mps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="low-level-data-structure-and-algorithms">
+<h1>10. Low Level Data Structure and Algorithms<a class="headerlink" href="#low-level-data-structure-and-algorithms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="matrix-product-state-mps">
+<h2>10.1. Matrix Product State (MPS)<a class="headerlink" href="#matrix-product-state-mps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="renormalizer.mps.Mps">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.mps.</code><code class="sig-name descname">Mps</code><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="renormalizer.mps.Mps.check_left_canonical">
+<code class="sig-name descname">check_left_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mps.check_left_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check L-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.check_right_canonical">
+<code class="sig-name descname">check_right_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mps.check_right_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check R-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.compress">
+<code class="sig-name descname">compress</code><span class="sig-paren">(</span><em class="sig-param">temp_m_trunc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mps.compress" title="Permalink to this definition">¶</a></dt>
+<dd><p>inp: canonicalise MPS (or MPO)</p>
+<dl class="simple">
+<dt>side=’l’: compress LEFT-canonicalised MPS</dt><dd><p>by sweeping from RIGHT to LEFT
+output MPS is right canonicalised i.e. CRRR</p>
+</dd>
+</dl>
+<p>side=’r’: reverse of ‘l’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>truncated MPS</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.conj">
+<code class="sig-name descname">conj</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; renormalizer.mps.mps.Mps<a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.conj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>complex conjugate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.construct_hybrid_Ham">
+<code class="sig-name descname">construct_hybrid_Ham</code><span class="sig-paren">(</span><em class="sig-param">mpo_indep</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.construct_hybrid_Ham"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.construct_hybrid_Ham" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct hybrid DMRG and Hartree(-Fock) Hamiltonian</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.dmrg_norm">
+<em class="property">property </em><code class="sig-name descname">dmrg_norm</code><a class="headerlink" href="#renormalizer.mps.Mps.dmrg_norm" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>if self.is_left_canon:</dt><dd><p>assert self.check_left_canonical()
+return np.linalg.norm(np.ravel(self[-1]))</p>
+</dd>
+<dt>else:</dt><dd><p>assert self.check_right_canonical()
+return np.linalg.norm(np.ravel(self[0]))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.dot">
+<code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="sig-param">other: renormalizer.mps.mps.Mps</em>, <em class="sig-param">with_hartree=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>dot product of two mps / mpo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.expand_bond_dimension">
+<code class="sig-name descname">expand_bond_dimension</code><span class="sig-paren">(</span><em class="sig-param">hint_mpo=None</em>, <em class="sig-param">coef=1e-10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.expand_bond_dimension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.expand_bond_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>expand bond dimension as required in compress_config</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.gs">
+<em class="property">classmethod </em><code class="sig-name descname">gs</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">max_entangled: bool</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.gs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.gs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain ground state at <span class="math notranslate nohighlight">\(T = 0\)</span> or <span class="math notranslate nohighlight">\(T = \infty\)</span> (maximum entangled).
+Electronic DOFs are always at ground state. and vibrational DOFs depend on <code class="docutils literal notranslate"><span class="pre">max_entangled</span></code>.
+For Spin-Boson model the electronic DOF also depends on <code class="docutils literal notranslate"><span class="pre">max_entangled</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">MolList</span></code>) – system information.</p></li>
+<li><p><strong>max_entanggled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – temperature of the vibrational DOFs. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+<span class="math notranslate nohighlight">\(T = \infty\)</span> and if set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, <span class="math notranslate nohighlight">\(T = 0\)</span>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.hybrid_exact_propagator">
+<code class="sig-name descname">hybrid_exact_propagator</code><span class="sig-paren">(</span><em class="sig-param">mpo_indep</em>, <em class="sig-param">x</em>, <em class="sig-param">space='GS'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mps.html#Mps.hybrid_exact_propagator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mps.hybrid_exact_propagator" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the exact propagator in the GS space or single molecule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.is_left_canon">
+<em class="property">property </em><code class="sig-name descname">is_left_canon</code><a class="headerlink" href="#renormalizer.mps.Mps.is_left_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the L-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.is_right_canon">
+<em class="property">property </em><code class="sig-name descname">is_right_canon</code><a class="headerlink" href="#renormalizer.mps.Mps.is_right_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the R-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mps.move_qnidx">
+<code class="sig-name descname">move_qnidx</code><span class="sig-paren">(</span><em class="sig-param">dstidx: int</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mps.move_qnidx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantum number has a boundary site, left hand of the site is L system qn,
+right hand of the side is R system qn, the sum of quantum number of L system
+and R system is tot.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="matrix-product-operator-mpo">
+<h2>10.2. Matrix Product Operator (MPO)<a class="headerlink" href="#matrix-product-operator-mpo" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="renormalizer.mps.Mpo">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.mps.</code><code class="sig-name descname">Mpo</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList = None</em>, <em class="sig-param">rep='star'</em>, <em class="sig-param">elocal_offset=None</em>, <em class="sig-param">offset=&lt;renormalizer.utils.quantity.Quantity object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpo.html#Mpo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mpo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix product operator (MPO)</p>
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.check_left_canonical">
+<code class="sig-name descname">check_left_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.check_left_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check L-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.check_right_canonical">
+<code class="sig-name descname">check_right_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.check_right_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check R-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.compress">
+<code class="sig-name descname">compress</code><span class="sig-paren">(</span><em class="sig-param">temp_m_trunc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.compress" title="Permalink to this definition">¶</a></dt>
+<dd><p>inp: canonicalise MPS (or MPO)</p>
+<dl class="simple">
+<dt>side=’l’: compress LEFT-canonicalised MPS</dt><dd><p>by sweeping from RIGHT to LEFT
+output MPS is right canonicalised i.e. CRRR</p>
+</dd>
+</dl>
+<p>side=’r’: reverse of ‘l’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>truncated MPS</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.conj">
+<code class="sig-name descname">conj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>complex conjugate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.contract">
+<code class="sig-name descname">contract</code><span class="sig-paren">(</span><em class="sig-param">mps</em>, <em class="sig-param">check_emtpy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpo.html#Mpo.contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mpo.contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>mapply-&gt;canonicalise-&gt;compress</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.dot">
+<code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>dot product of two mps / mpo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.e_intersite">
+<em class="property">classmethod </em><code class="sig-name descname">e_intersite</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">opera: dict</em>, <em class="sig-param">scale: renormalizer.utils.quantity.Quantity = &lt;renormalizer.utils.quantity.Quantity object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpo.html#Mpo.e_intersite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mpo.e_intersite" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the inter electronic site MPO
+:param mol_list: MolList</p>
+<blockquote>
+<div><p>the molecular information</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opera</strong> – the operators such as {1:”a”, 3:r”a^dagger”}</p></li>
+<li><p><strong>scale</strong> – Quantity
+scalar to scale the mpo</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.exact_propagator">
+<em class="property">classmethod </em><code class="sig-name descname">exact_propagator</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">x</em>, <em class="sig-param">space='GS'</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpo.html#Mpo.exact_propagator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mpo.exact_propagator" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the GS space propagator e^{xH} exact MPO
+H=sum_{in} omega_{in} b^dagger_{in} b_{in}
+fortunately, the H is local. so e^{xH} = e^{xh1}e^{xh2}…e^{xhn}
+the bond dimension is 1
+shift is the a constant for H+shift</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.is_left_canon">
+<em class="property">property </em><code class="sig-name descname">is_left_canon</code><a class="headerlink" href="#renormalizer.mps.Mpo.is_left_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the L-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.is_right_canon">
+<em class="property">property </em><code class="sig-name descname">is_right_canon</code><a class="headerlink" href="#renormalizer.mps.Mpo.is_right_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the R-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.move_qnidx">
+<code class="sig-name descname">move_qnidx</code><span class="sig-paren">(</span><em class="sig-param">dstidx: int</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.Mpo.move_qnidx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantum number has a boundary site, left hand of the site is L system qn,
+right hand of the side is R system qn, the sum of quantum number of L system
+and R system is tot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.Mpo.quasi_boson">
+<em class="property">classmethod </em><code class="sig-name descname">quasi_boson</code><span class="sig-paren">(</span><em class="sig-param">opera</em>, <em class="sig-param">nqb</em>, <em class="sig-param">trunc</em>, <em class="sig-param">base=2</em>, <em class="sig-param">c1=1.0</em>, <em class="sig-param">c2=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpo.html#Mpo.quasi_boson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.Mpo.quasi_boson" title="Permalink to this definition">¶</a></dt>
+<dd><p>nqb : # of quasi boson sites
+opera : operator to be decomposed</p>
+<blockquote>
+<div><p>r”b + b^dagger”</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="matrix-product-density-matrix-mpdm">
+<h2>10.3. Matrix Product Density Matrix (MPDM)<a class="headerlink" href="#matrix-product-density-matrix-mpdm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="renormalizer.mps.MpDm">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.mps.</code><code class="sig-name descname">MpDm</code><a class="reference internal" href="_modules/renormalizer/mps/mpdm.html#MpDm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.MpDm" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="renormalizer.mps.MpDm.check_left_canonical">
+<code class="sig-name descname">check_left_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.check_left_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check L-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.check_right_canonical">
+<code class="sig-name descname">check_right_canonical</code><span class="sig-paren">(</span><em class="sig-param">rtol=1e-05</em>, <em class="sig-param">atol=1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.check_right_canonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>check R-canonical</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.compress">
+<code class="sig-name descname">compress</code><span class="sig-paren">(</span><em class="sig-param">temp_m_trunc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.compress" title="Permalink to this definition">¶</a></dt>
+<dd><p>inp: canonicalise MPS (or MPO)</p>
+<dl class="simple">
+<dt>side=’l’: compress LEFT-canonicalised MPS</dt><dd><p>by sweeping from RIGHT to LEFT
+output MPS is right canonicalised i.e. CRRR</p>
+</dd>
+</dl>
+<p>side=’r’: reverse of ‘l’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>truncated MPS</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.conj">
+<code class="sig-name descname">conj</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; renormalizer.mps.mps.Mps<a class="headerlink" href="#renormalizer.mps.MpDm.conj" title="Permalink to this definition">¶</a></dt>
+<dd><p>complex conjugate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.construct_hybrid_Ham">
+<code class="sig-name descname">construct_hybrid_Ham</code><span class="sig-paren">(</span><em class="sig-param">mpo_indep</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.construct_hybrid_Ham" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct hybrid DMRG and Hartree(-Fock) Hamiltonian</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.contract">
+<code class="sig-name descname">contract</code><span class="sig-paren">(</span><em class="sig-param">mps</em>, <em class="sig-param">check_emtpy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>mapply-&gt;canonicalise-&gt;compress</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.dmrg_norm">
+<em class="property">property </em><code class="sig-name descname">dmrg_norm</code><a class="headerlink" href="#renormalizer.mps.MpDm.dmrg_norm" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>if self.is_left_canon:</dt><dd><p>assert self.check_left_canonical()
+return np.linalg.norm(np.ravel(self[-1]))</p>
+</dd>
+<dt>else:</dt><dd><p>assert self.check_right_canonical()
+return np.linalg.norm(np.ravel(self[0]))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.dot">
+<code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="sig-param">other: renormalizer.mps.mpdm.MpDmBase</em>, <em class="sig-param">with_hartree=True</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>dot product of two mps / mpo</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.e_intersite">
+<em class="property">classmethod </em><code class="sig-name descname">e_intersite</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">opera: dict</em>, <em class="sig-param">scale: renormalizer.utils.quantity.Quantity = &lt;renormalizer.utils.quantity.Quantity object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.e_intersite" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the inter electronic site MPO
+:param mol_list: MolList</p>
+<blockquote>
+<div><p>the molecular information</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opera</strong> – the operators such as {1:”a”, 3:r”a^dagger”}</p></li>
+<li><p><strong>scale</strong> – Quantity
+scalar to scale the mpo</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.exact_propagator">
+<em class="property">classmethod </em><code class="sig-name descname">exact_propagator</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">x</em>, <em class="sig-param">space='GS'</em>, <em class="sig-param">shift=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.exact_propagator" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the GS space propagator e^{xH} exact MPO
+H=sum_{in} omega_{in} b^dagger_{in} b_{in}
+fortunately, the H is local. so e^{xH} = e^{xh1}e^{xh2}…e^{xhn}
+the bond dimension is 1
+shift is the a constant for H+shift</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.expand_bond_dimension">
+<code class="sig-name descname">expand_bond_dimension</code><span class="sig-paren">(</span><em class="sig-param">hint_mpo=None</em>, <em class="sig-param">coef=1e-10</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.expand_bond_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>expand bond dimension as required in compress_config</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.gs">
+<em class="property">classmethod </em><code class="sig-name descname">gs</code><span class="sig-paren">(</span><em class="sig-param">mol_list</em>, <em class="sig-param">max_entangled</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.gs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain ground state at <span class="math notranslate nohighlight">\(T = 0\)</span> or <span class="math notranslate nohighlight">\(T = \infty\)</span> (maximum entangled).
+Electronic DOFs are always at ground state. and vibrational DOFs depend on <code class="docutils literal notranslate"><span class="pre">max_entangled</span></code>.
+For Spin-Boson model the electronic DOF also depends on <code class="docutils literal notranslate"><span class="pre">max_entangled</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">MolList</span></code>) – system information.</p></li>
+<li><p><strong>max_entanggled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – temperature of the vibrational DOFs. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+<span class="math notranslate nohighlight">\(T = \infty\)</span> and if set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, <span class="math notranslate nohighlight">\(T = 0\)</span>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.hybrid_exact_propagator">
+<code class="sig-name descname">hybrid_exact_propagator</code><span class="sig-paren">(</span><em class="sig-param">mpo_indep</em>, <em class="sig-param">x</em>, <em class="sig-param">space='GS'</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.hybrid_exact_propagator" title="Permalink to this definition">¶</a></dt>
+<dd><p>construct the exact propagator in the GS space or single molecule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.is_left_canon">
+<em class="property">property </em><code class="sig-name descname">is_left_canon</code><a class="headerlink" href="#renormalizer.mps.MpDm.is_left_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the L-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.is_right_canon">
+<em class="property">property </em><code class="sig-name descname">is_right_canon</code><a class="headerlink" href="#renormalizer.mps.MpDm.is_right_canon" title="Permalink to this definition">¶</a></dt>
+<dd><p>check the qn center in the R-canonical structure</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.max_entangled_ex">
+<em class="property">classmethod </em><code class="sig-name descname">max_entangled_ex</code><span class="sig-paren">(</span><em class="sig-param">mol_list</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/mpdm.html#MpDm.max_entangled_ex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.MpDm.max_entangled_ex" title="Permalink to this definition">¶</a></dt>
+<dd><p>T = infty locally maximal entangled EX state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.move_qnidx">
+<code class="sig-name descname">move_qnidx</code><span class="sig-paren">(</span><em class="sig-param">dstidx: int</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.move_qnidx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantum number has a boundary site, left hand of the site is L system qn,
+right hand of the side is R system qn, the sum of quantum number of L system
+and R system is tot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.MpDm.quasi_boson">
+<em class="property">classmethod </em><code class="sig-name descname">quasi_boson</code><span class="sig-paren">(</span><em class="sig-param">opera</em>, <em class="sig-param">nqb</em>, <em class="sig-param">trunc</em>, <em class="sig-param">base=2</em>, <em class="sig-param">c1=1.0</em>, <em class="sig-param">c2=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#renormalizer.mps.MpDm.quasi_boson" title="Permalink to this definition">¶</a></dt>
+<dd><p>nqb : # of quasi boson sites
+opera : operator to be decomposed</p>
+<blockquote>
+<div><p>r”b + b^dagger”</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-renormalizer.mps.thermalprop">
+<span id="thermal-propagation"></span><h2>10.4. Thermal Propagation<a class="headerlink" href="#module-renormalizer.mps.thermalprop" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="renormalizer.mps.thermalprop.ThermalProp">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.mps.thermalprop.</code><code class="sig-name descname">ThermalProp</code><span class="sig-paren">(</span><em class="sig-param">init_mpdm: renormalizer.mps.mpdm.MpDm</em>, <em class="sig-param">h_mpo: renormalizer.mps.mpo.Mpo</em>, <em class="sig-param">exact: bool = False</em>, <em class="sig-param">space: str = 'GS'</em>, <em class="sig-param">evolve_config: renormalizer.utils.configs.EvolveConfig = None</em>, <em class="sig-param">dump_dir: str = None</em>, <em class="sig-param">job_name: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#ThermalProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.ThermalProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">renormalizer.utils.tdmps.TdMpsJob</span></code></p>
+<p>Thermally Propagate initial matrix product density operator (<a class="reference internal" href="#renormalizer.mps.MpDm" title="renormalizer.mps.MpDm"><code class="xref py py-class docutils literal notranslate"><span class="pre">MpDm</span></code></a>) in imaginary time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>init_mpdm</strong> (<a class="reference internal" href="#renormalizer.mps.MpDm" title="renormalizer.mps.MpDm"><code class="xref py py-class docutils literal notranslate"><span class="pre">MpDm</span></code></a>) – the initial density matrix to be propagated. Usually identity.</p></li>
+<li><p><strong>h_mpo</strong> (<a class="reference internal" href="#renormalizer.mps.Mpo" title="renormalizer.mps.Mpo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mpo</span></code></a>) – the system Hamiltonian.</p></li>
+<li><p><strong>exact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether propagate assuming Hamiltonian is local
+<span class="math notranslate nohighlight">\(\hat H = \sum_i \hat H_i = \sum_{in} \omega_{in} b^\dagger_{in} b_{in}\)</span> and
+exact propagation is possible through <span class="math notranslate nohighlight">\(e^{xH} = e^{xh_1}e^{xh_2} \cdots e^{xh_n}\)</span>.
+If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, properties such as occupations are not calculated during
+time evolution for better efficiency.</p></li>
+<li><p><strong>space</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the space of exact propagation. Possible options are <code class="docutils literal notranslate"><span class="pre">&quot;GS&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;EX&quot;</span></code>.
+If set to <code class="docutils literal notranslate"><span class="pre">&quot;GS&quot;</span></code>, then the exact propagation is performed in zero exciton space.
+If set to <code class="docutils literal notranslate"><span class="pre">&quot;EX&quot;</span></code>, then the exact propagation is performed in one exciton space,
+i.e. the vibrations are regarded as displaced oscillators.</p></li>
+<li><p><strong>evolve_config</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">EvolveConfig</span></code>) – config when evolving the MpDm in imaginary time.</p></li>
+<li><p><strong>dump_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the directory for logging and numerical result output.</p></li>
+<li><p><strong>job_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the calculation job which determines the file name of the logging and numerical result output.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="renormalizer.mps.thermalprop.ThermalProp.evolve">
+<code class="sig-name descname">evolve</code><span class="sig-paren">(</span><em class="sig-param">evolve_dt=None</em>, <em class="sig-param">nsteps=None</em>, <em class="sig-param">evolve_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#ThermalProp.evolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.ThermalProp.evolve" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evolve_dt</strong> – the time step to run <cite>process_mps(self, mps)</cite> to obtain the
+properties</p></li>
+<li><p><strong>nsteps</strong> – int
+the total number of evolution steps</p></li>
+<li><p><strong>evolve_time</strong> – the total evolution time</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>evolve_dt math: `   imes` nsteps = evolve_time
+otherwise nsteps has a higher priority</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.thermalprop.ThermalProp.evolve_single_step">
+<code class="sig-name descname">evolve_single_step</code><span class="sig-paren">(</span><em class="sig-param">evolve_dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#ThermalProp.evolve_single_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.ThermalProp.evolve_single_step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>new mps after the evolution</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.thermalprop.ThermalProp.get_dump_dict">
+<code class="sig-name descname">get_dump_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#ThermalProp.get_dump_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.ThermalProp.get_dump_dict" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>return a (ordered) dict to dump as json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.mps.thermalprop.ThermalProp.init_mps">
+<code class="sig-name descname">init_mps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#ThermalProp.init_mps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.ThermalProp.init_mps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>initial mps of the system</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="renormalizer.mps.thermalprop.load_thermal_state">
+<code class="sig-prename descclassname">renormalizer.mps.thermalprop.</code><code class="sig-name descname">load_thermal_state</code><span class="sig-paren">(</span><em class="sig-param">mol_list</em>, <em class="sig-param">path: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/mps/thermalprop.html#load_thermal_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.mps.thermalprop.load_thermal_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load thermal propagated state from disk. Return None if the file is not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">MolList</span></code>) – system information</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the path to load thermal state from. Should be an <cite>npz</cite> file.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns: Loaded MpDm</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="model.html" class="btn btn-neutral float-right" title="11. model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="configs.html" class="btn btn-neutral float-left" title="9. Calculation Configurations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Shuaigroup
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

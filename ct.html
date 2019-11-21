@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Charge Transport &mdash; Renormalizer 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Frequency domain DMRG" href="cv.html" />
+    <link rel="prev" title="4. spectra: absorption/emission spectrum at zero/finite temperature" href="spectrum.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Renormalizer
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. An overview of Renormalizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">2. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">3. Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum.html">4. spectra: absorption/emission spectrum at zero/finite temperature</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Charge Transport</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-renormalizer.transport.transport">5.1. charge diffusion simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-renormalizer.transport.autocorr">5.2. obtain mobility by Kubo formula</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cv.html">6. Frequency domain DMRG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">7. lib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sbm.html">8. sbm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">9. Calculation Configurations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mps.html">10. Low Level Data Structure and Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">11. model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">12. some self-built tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="develop.html">13. How to develop Renormalizer</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Renormalizer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>5. Charge Transport</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ct.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="charge-transport">
+<h1>5. Charge Transport<a class="headerlink" href="#charge-transport" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-renormalizer.transport.transport">
+<span id="charge-diffusion-simulation"></span><h2>5.1. charge diffusion simulation<a class="headerlink" href="#module-renormalizer.transport.transport" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="renormalizer.transport.transport.ChargeTransport">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.transport.transport.</code><code class="sig-name descname">ChargeTransport</code><span class="sig-paren">(</span><em class="sig-param">mol_list: renormalizer.model.mlist.MolList</em>, <em class="sig-param">temperature: renormalizer.utils.quantity.Quantity = &lt;renormalizer.utils.quantity.Quantity object&gt;</em>, <em class="sig-param">compress_config: renormalizer.utils.configs.CompressConfig = None</em>, <em class="sig-param">evolve_config: renormalizer.utils.configs.EvolveConfig = None</em>, <em class="sig-param">stop_at_edge: bool = True</em>, <em class="sig-param">init_electron=&lt;InitElectron.relaxed: 'analytically relaxed phonon(s)'&gt;</em>, <em class="sig-param">logging_output: List[str] = None</em>, <em class="sig-param">rdm: bool = False</em>, <em class="sig-param">dissipation: float = 0</em>, <em class="sig-param">dump_dir: str = None</em>, <em class="sig-param">job_name: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/transport/transport.html#ChargeTransport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate charge diffusion by TD-DMRG.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">MolList</span></code>) – system information.</p></li>
+<li><p><strong>temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code>) – simulation temperature. Default is zero temperature.</p></li>
+<li><p><strong>compress_config</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">CompressConfig</span></code>) – config when compressing MPS.</p></li>
+<li><p><strong>evolve_config</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">EvolveConfig</span></code>) – config when evolving MPS.</p></li>
+<li><p><strong>stop_at_edge</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether stop when charge has diffused to the boundary of the system. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>init_electron</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">InitElectron</span></code>) – the method to prepare the initial state.</p></li>
+<li><p><strong>logging_output</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – contents to be put into logging output.
+Should be a subset of [“r_square”, “e_occupations”, “ph_occupations”].
+Note that this does not affect dumped output in JSON format.</p></li>
+<li><p><strong>rdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether calculate reduced density matrix and k-space representation for the electron.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code> because usually the calculation is time consuming.
+Using scheme 4 might partly solve the problem.</p></li>
+<li><p><strong>dissipation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – the dissipation strength. This is a experimental feature. Default is 0.
+When set to finite value, Lindblad equation is applied to perform time evolution.</p></li>
+<li><p><strong>dump_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the directory for logging and numerical result output.
+Also the directory from which to load previous thermal propagated initial state (if exists).</p></li>
+<li><p><strong>job_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the calculation job which determines the file name of the logging and numerical result output.
+For thermal propagated initial state input/output the file name is appended with <code class="docutils literal notranslate"><span class="pre">&quot;_impdm.npz&quot;</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.energies">
+<code class="sig-name descname">energies</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.energies" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculated energy of the states during the time evolution.
+Without dissipation or TD-Hartree the value should remain unchanged and to some extent
+can be used to measure the error during time evolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.r_square_array">
+<code class="sig-name descname">r_square_array</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.r_square_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculated mean square displacement
+<span class="math notranslate nohighlight">\(\langle \psi | \hat r^2 | \psi \rangle - \langle \psi | \hat r | \psi \rangle^2\)</span>
+at each evolution time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.e_occupations_array">
+<code class="sig-name descname">e_occupations_array</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.e_occupations_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculated electron occupations in real space on each site for each evolution time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.ph_occupations_array">
+<code class="sig-name descname">ph_occupations_array</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.ph_occupations_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculated phonon occupations on each site for each evolution time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.k_occupations_array">
+<code class="sig-name descname">k_occupations_array</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.k_occupations_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculated electron occupations in momentum (k) space
+on each site for each evolution time step. Only available when <code class="docutils literal notranslate"><span class="pre">rdm</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+The basis transformation is based on:</p>
+<div class="math notranslate nohighlight">
+\[| k \rangle = \sum_j e^{-ijk} | j \rangle\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> starts from <span class="math notranslate nohighlight">\(-\pi\)</span> to <span class="math notranslate nohighlight">\(\pi\)</span> with interval <span class="math notranslate nohighlight">\(2\pi/N\)</span>.
+<span class="math notranslate nohighlight">\(N\)</span> represents total number of electronic sites.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="renormalizer.transport.transport.ChargeTransport.coherent_length_array">
+<code class="sig-name descname">coherent_length_array</code><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.coherent_length_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>coherent length <span class="math notranslate nohighlight">\(L\)</span> calculated for each evolution time step.</p>
+<div class="math notranslate nohighlight">
+\[L = \sum_{ij, i \neq j} | \rho_{ij} |\]</div>
+<p>where <cite>rho</cite> is the density matrix of the electron. Naturally this is only available when
+<code class="docutils literal notranslate"><span class="pre">rdm</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.transport.transport.ChargeTransport.evolve_single_step">
+<code class="sig-name descname">evolve_single_step</code><span class="sig-paren">(</span><em class="sig-param">evolve_dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/transport/transport.html#ChargeTransport.evolve_single_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.evolve_single_step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>new mps after the evolution</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.transport.transport.ChargeTransport.get_dump_dict">
+<code class="sig-name descname">get_dump_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/transport/transport.html#ChargeTransport.get_dump_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.get_dump_dict" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>return a (ordered) dict to dump as json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="renormalizer.transport.transport.ChargeTransport.init_mps">
+<code class="sig-name descname">init_mps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/renormalizer/transport/transport.html#ChargeTransport.init_mps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.transport.transport.ChargeTransport.init_mps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>initial mps of the system</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="renormalizer.transport.transport.InitElectron">
+<em class="property">class </em><code class="sig-prename descclassname">renormalizer.transport.transport.</code><code class="sig-name descname">InitElectron</code><a class="reference internal" href="_modules/renormalizer/transport/transport.html#InitElectron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#renormalizer.transport.transport.InitElectron" title="Permalink to this definition">¶</a></dt>
+<dd><p>Available methods to prepare initial state of charge diffusion</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-renormalizer.transport.autocorr">
+<span id="obtain-mobility-by-kubo-formula"></span><h2>5.2. obtain mobility by Kubo formula<a class="headerlink" href="#module-renormalizer.transport.autocorr" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cv.html" class="btn btn-neutral float-right" title="6. Frequency domain DMRG" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="spectrum.html" class="btn btn-neutral float-left" title="4. spectra: absorption/emission spectrum at zero/finite temperature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Shuaigroup
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
