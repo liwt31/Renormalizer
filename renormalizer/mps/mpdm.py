@@ -6,10 +6,12 @@ from typing import List
 import numpy as np
 import scipy.linalg
 
-from renormalizer.mps.backend import xp, backend
-from renormalizer.mps.matrix import tensordot, ones
+from renormalizer.model import MolList, MolList2, ModelTranslator
+from renormalizer.mps.backend import xp
+from renormalizer.mps.matrix import tensordot, asnumpy
 from renormalizer.mps import Mpo, Mps
 from renormalizer.mps.tdh import unitary_propagation
+from renormalizer.utils import Op
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +81,7 @@ class MpDmBase(Mps, Mpo):
             assert mt_self.shape[2] == mt_other.shape[1]
             # mt=np.einsum("apqb,cqrd->acprbd",mt_s,mt_o)
             mt = xp.moveaxis(
-                xp.tensordot(mt_self.array, mt_other.array, axes=([2], [1])),
+                tensordot(mt_self.array, mt_other.array, axes=([2], [1])),
                 [-3, -2],
                 [1, 3],
             )
@@ -120,7 +122,7 @@ class MpDm(MpDmBase):
         mpo = cls()
         mpo.mol_list = mps.mol_list
         for ms in mps:
-            mo = xp.zeros(tuple([ms.shape[0]] + [ms.shape[1]] * 2 + [ms.shape[2]]))
+            mo = np.zeros(tuple([ms.shape[0]] + [ms.shape[1]] * 2 + [ms.shape[2]]))
             for iaxis in range(ms.shape[1]):
                 mo[:, iaxis, iaxis, :] = ms[:, iaxis, :].array
             mpo.append(mo)
@@ -147,7 +149,15 @@ class MpDm(MpDmBase):
         """
         mps = Mps.gs(mol_list, max_entangled=True)
         # the creation operator \\sum_i a^\\dagger_i
-        ex_mps = Mpo.onsite(mol_list, r"a^\dagger").apply(mps)
+        if isinstance(mol_list, MolList):
+            ex_mpo = Mpo.onsite(mol_list, r"a^\dagger")
+        else:
+            model = {}
+            for dof in mol_list.e_dofs:
+                model[(dof,)] = [(Op("a^\dagger", 1), 1.0)]
+            ex_mpo = Mpo.general_mpo(mol_list, model=model, model_translator=ModelTranslator.general_model)
+
+        ex_mps = ex_mpo @ mps
         if normalize:
             ex_mps.normalize(1.0)
         return cls.from_mps(ex_mps)
@@ -157,26 +167,28 @@ class MpDm(MpDmBase):
         return cls.from_mps(Mps.gs(mol_list, max_entangled=True))
 
     def _get_sigmaqn(self, idx):
-        if self.ephtable.is_phonon(idx):
-            return np.array([0] * self.pbond_list[idx] ** 2)
-        # for electron: auxiliary space all 0.
-        if self.mol_list.scheme < 4 and self.ephtable.is_electron(idx):
-            return np.array([0, 0, 1, 1])
-        elif self.mol_list.scheme == 4 and self.ephtable.is_electrons(idx):
-            n = self.pbond_list[idx]
-            return np.array([0] * n + [1] * (n * (n - 1)))
+        if isinstance(self.mol_list, MolList2):
+            array_up = self.mol_list.basis[idx].sigmaqn
+            array_down = np.zeros_like(array_up)
+            return np.add.outer(array_up, array_down)
         else:
-            assert False
+            if self.ephtable.is_phonon(idx):
+                return np.zeros((self.pbond_list[idx],self.pbond_list[idx]), dtype=np.int32)
+            # for electron: auxiliary space all 0.
+            if self.mol_list.scheme < 4 and self.ephtable.is_electron(idx):
+                return np.add.outer(np.array([0, 1]), np.array([0, 0]))
+            elif self.mol_list.scheme == 4 and self.ephtable.is_electrons(idx):
+                n = self.pbond_list[idx]
+                return np.add.outer(np.array([0]+[1]*(n-1)), np.array([0]*n))
+            else:
+                assert False
+
 
     def calc_reduced_density_matrix(self) -> np.ndarray:
-        if self.mol_list.scheme < 4:
+        if isinstance(self.mol_list, MolList):
             return self._calc_reduced_density_matrix(self, self.conj_trans())
-        elif self.mol_list.scheme == 4:
-            # be careful this method should be read-only
-            copy = self.copy().canonicalise()
-            copy.canonicalise(self.mol_list.e_idx())
-            e_mo = copy[self.mol_list.e_idx()]
-            return tensordot(e_mo, e_mo.conj(), axes=((0, 2 ,3), (0, 2, 3))).asnumpy()[1:, 1:]
+        elif isinstance(self.mol_list, MolList2):
+            return self._calc_reduced_density_matrix(None, None)
         else:
             assert False
 

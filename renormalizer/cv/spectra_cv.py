@@ -3,9 +3,11 @@
 # correction vector base
 import numpy as np
 from multiprocessing import Pool
+import multiprocessing
 from renormalizer.mps import Mpo
 from renormalizer.utils import Quantity
 from renormalizer.utils.elementop import construct_e_op_dict, ph_op_matrix
+import importlib.util
 import logging
 import time
 
@@ -48,6 +50,8 @@ class SpectraCv(object):
         print('Quantum number of X', check_1)
     '''
     def run(self):
+        if importlib.util.find_spec("cupy"):
+            multiprocessing.set_start_method('forkserver', force=True)
         start = time.time()
         pool = Pool(processes=self.cores)
         logger.info(f"{len(self.freq_reg)} total frequency to do")
@@ -128,8 +132,11 @@ class SpectraCv(object):
     def oper_prepare(self, omega):
         raise NotImplementedError
 
-    def initialize_LR(self, direction):
-        raise NotImplemented
+    def optimize_cv(self, lr_group, direction, isite, num, percent=0):
+        raise NotImplementedError
 
-    def update_LR(self, direction):
-        raise NotImplemented
+    def initialize_LR(self, direction):
+        raise NotImplementedError
+
+    def update_LR(self, lrgroup, direction, isite):
+        raise NotImplementedError

@@ -8,6 +8,7 @@ import scipy
 
 
 from renormalizer.lib import davidson
+from renormalizer.mps.backend import xp
 from renormalizer.mps.matrix import (
     Matrix,
     multi_tensor_contract,
@@ -15,7 +16,7 @@ from renormalizer.mps.matrix import (
     einsum,
     moveaxis,
     tensordot,
-)
+    asnumpy, asxp)
 from renormalizer.mps import Mpo, Mps, svd_qn
 from renormalizer.mps.lib import updatemps, Environ
 from renormalizer.utils import Quantity
@@ -162,15 +163,15 @@ def optimize_mps_dmrg(mps, mpo):
             )
 
             # get the quantum number pattern
-            qnmat, qnbigl, qnbigr = construct_qnmat(
-                mps, mpo.ephtable, mpo.pbond_list, addlist, method, system
+            qnmat, qnbigl, qnbigr = svd_qn.construct_qnmat(
+                mps, mpo.pbond_list, addlist, method, system
             )
             cshape = qnmat.shape
 
             # hdiag
-            tmp_ltensor = einsum("aba -> ba", ltensor)
-            tmp_MPOimps = einsum("abbc -> abc", mpo[imps])
-            tmp_rtensor = einsum("aba -> ba", rtensor)
+            tmp_ltensor = xp.einsum("aba -> ba", asxp(ltensor))
+            tmp_MPOimps = xp.einsum("abbc -> abc", asxp(mpo[imps]))
+            tmp_rtensor = xp.einsum("aba -> ba", asxp(rtensor))
             if method == "1site":
                 #   S-a c f-S
                 #   O-b-O-g-O
@@ -181,12 +182,12 @@ def optimize_mps_dmrg(mps, mpo):
                 )[(qnmat == nexciton)]
                 # initial guess   b-S-c
                 #                   a
-                cguess = mps[imps][qnmat == nexciton]
+                cguess = mps[imps][qnmat == nexciton].array
             else:
                 #   S-a c   d f-S
                 #   O-b-O-e-O-g-O
                 #   S-a c   d f-S
-                tmp_MPOimpsm1 = einsum("abbc -> abc", mpo[imps - 1])
+                tmp_MPOimpsm1 = xp.einsum("abbc -> abc", asxp(mpo[imps - 1]))
                 path = [
                     ([0, 1], "ba, bce -> ace"),
                     ([0, 1], "edg, gf -> edf"),
@@ -197,15 +198,16 @@ def optimize_mps_dmrg(mps, mpo):
                 )[(qnmat == nexciton)]
                 # initial guess b-S-c-S-e
                 #                 a   d
-                cguess = tensordot(mps[imps - 1], mps[imps], axes=1)[qnmat == nexciton]
-            cguess = cguess.asnumpy()
+                cguess = asnumpy(tensordot(mps[imps - 1], mps[imps], axes=1)[qnmat == nexciton])
             hdiag *= inverse
             nonzeros = np.sum(qnmat == nexciton)
             # print("Hmat dim", nonzeros)
 
+            mo1 = asxp(mpo[imps-1])
+            mo2 = asxp(mpo[imps])
             def hop(c):
                 # convert c to initial structure according to qn pattern
-                cstruct = cvec2cmat(cshape, c, qnmat, nexciton)
+                cstruct = asxp(svd_qn.cvec2cmat(cshape, c, qnmat, nexciton))
 
                 if method == "1site":
                     # S-a   l-S
@@ -220,7 +222,7 @@ def optimize_mps_dmrg(mps, mpo):
                         ([1, 0], "clef, lfk -> cek"),
                     ]
                     cout = multi_tensor_contract(
-                        path, ltensor, Matrix(cstruct), mpo[imps], rtensor
+                        path, ltensor, cstruct, mo2, rtensor
                     )
                     # for small matrices, check hermite:
                     # a=tensordot(ltensor, mpo[imps], ((1), (0)))
@@ -242,20 +244,20 @@ def optimize_mps_dmrg(mps, mpo):
                     cout = multi_tensor_contract(
                         path,
                         ltensor,
-                        Matrix(cstruct),
-                        mpo[imps - 1],
-                        mpo[imps],
+                        cstruct,
+                        mo1,
+                        mo2,
                         rtensor,
                     )
                 # convert structure c to 1d according to qn
-                return inverse * cout.asnumpy()[qnmat == nexciton]
+                return inverse * asnumpy(cout)[qnmat == nexciton]
 
             if nroots != 1:
                 cguess = [cguess]
                 for iroot in range(nroots - 1):
                     cguess.append(np.random.random([nonzeros]) - 0.5)
 
-            precond = lambda x, e, *args: x / (hdiag.asnumpy() - e + 1e-4)
+            precond = lambda x, e, *args: x / (asnumpy(hdiag) - e + 1e-4)
 
             e, c = davidson(
                 hop, cguess, precond, max_cycle=100, nroots=nroots, max_memory=64000
@@ -268,7 +270,7 @@ def optimize_mps_dmrg(mps, mpo):
 
             energies.append(e)
 
-            cstruct = cvec2cmat(cshape, c, qnmat, nexciton, nroots=nroots)
+            cstruct = svd_qn.cvec2cmat(cshape, c, qnmat, nexciton, nroots=nroots)
 
             if nroots == 1:
                 # direct svd the coefficient matrix
@@ -297,18 +299,18 @@ def optimize_mps_dmrg(mps, mpo):
                 mps[imps] = mt
                 if system == "L":
                     if imps != len(mps) - 1:
-                        mps[imps + 1] = tensordot(compmps, mps[imps + 1], axes=1)
+                        mps[imps + 1] = tensordot(compmps, mps[imps + 1].array, axes=1)
                         mps.qn[imps + 1] = mpsqn
                     else:
-                        mps[imps] = tensordot(mps[imps], compmps, axes=1)
+                        mps[imps] = tensordot(mps[imps].array, compmps, axes=1)
                         mps.qn[imps + 1] = [0]
 
                 else:
                     if imps != 0:
-                        mps[imps - 1] = tensordot(mps[imps - 1], compmps, axes=1)
+                        mps[imps - 1] = tensordot(mps[imps - 1].array, compmps, axes=1)
                         mps.qn[imps] = mpsqn
                     else:
-                        mps[imps] = tensordot(compmps, mps[imps], axes=1)
+                        mps[imps] = tensordot(compmps, mps[imps].array, axes=1)
                         mps.qn[imps] = [0]
             else:
                 if system == "L":
@@ -352,7 +354,7 @@ def renormalization_svd(cstruct, qnbigl, qnbigr, domain, nexciton, Mmax, percent
             Vset, SVset, qnrnew, Uset, nexciton, Mmax, percent=percent
         )
         return (
-            moveaxis(mps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
+            xp.moveaxis(mps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
             mpsdim,
             mpsqn,
             compmps.reshape(list(qnbigl.shape) + [mpsdim]),
@@ -365,7 +367,7 @@ def renormalization_svd(cstruct, qnbigl, qnbigr, domain, nexciton, Mmax, percent
             mps.reshape(list(qnbigl.shape) + [mpsdim]),
             mpsdim,
             mpsqn,
-            moveaxis(compmps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
+            xp.moveaxis(compmps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
         )
 
 
@@ -403,11 +405,11 @@ def renormalization_ddm(cstruct, qnbigl, qnbigr, domain, nexciton, Mmax, percent
 
     if domain == "R":
         return (
-            moveaxis(mps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
+            xp.moveaxis(mps.reshape(list(qnbigr.shape) + [mpsdim]), -1, 0),
             mpsdim,
             mpsqn,
             tensordot(
-                Matrix(cstruct[0]),
+                asxp(cstruct[0]),
                 mps.reshape(list(qnbigr.shape) + [mpsdim]),
                 axes=(range(qnbigl.ndim, cstruct[0].ndim), range(qnbigr.ndim)),
             ),
@@ -419,60 +421,8 @@ def renormalization_ddm(cstruct, qnbigl, qnbigr, domain, nexciton, Mmax, percent
             mpsqn,
             tensordot(
                 mps.reshape(list(qnbigl.shape) + [mpsdim]),
-                Matrix(cstruct[0]),
+                asxp(cstruct[0]),
                 axes=(range(qnbigl.ndim), range(qnbigl.ndim)),
             ),
         )
 
-
-def cvec2cmat(cshape, c, qnmat, nexciton, nroots=1):
-    # recover good quantum number vector c to matrix format
-    if nroots == 1:
-        cstruct = np.zeros(cshape, dtype=c.dtype)
-        np.place(cstruct, qnmat == nexciton, c)
-    else:
-        cstruct = []
-        for ic in c:
-            icstruct = np.zeros(cshape, dtype=ic.dtype)
-            np.place(icstruct, qnmat == nexciton, ic)
-            cstruct.append(icstruct)
-
-    return cstruct
-
-
-def construct_qnmat(mps, ephtable, pbond, addlist, method, system):
-    """
-    construct the quantum number pattern, the structure is as the coefficient
-    QN: quantum number list at each bond
-    ephtable : e-ph table 1 is electron and 0 is phonon 
-    pbond : physical pbond
-    addlist : the sigma orbital set
-    """
-    # print(method)
-    assert method in ["1site", "2site"]
-    assert system in ["L", "R"]
-    qnl = np.array(mps.qn[addlist[0]])
-    qnr = np.array(mps.qn[addlist[-1] + 1])
-    qnmat = qnl.copy()
-    qnsigmalist = []
-
-    for idx in addlist:
-
-        qnsigma = mps[idx].sigmaqn
-        qnmat = np.add.outer(qnmat, qnsigma)
-        qnsigmalist.append(qnsigma)
-
-    qnmat = np.add.outer(qnmat, qnr)
-
-    if method == "1site":
-        if system == "R":
-            qnbigl = qnl
-            qnbigr = np.add.outer(qnsigmalist[-1], qnr)
-        else:
-            qnbigl = np.add.outer(qnl, qnsigmalist[0])
-            qnbigr = qnr
-    else:
-        qnbigl = np.add.outer(qnl, qnsigmalist[0])
-        qnbigr = np.add.outer(qnsigmalist[-1], qnr)
-
-    return qnmat, qnbigl, qnbigr

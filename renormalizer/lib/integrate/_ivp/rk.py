@@ -1,4 +1,3 @@
-from __future__ import division, print_function, absolute_import
 from .base import OdeSolver, DenseOutput
 from .common import (
     validate_max_step,
@@ -9,9 +8,7 @@ from .common import (
     validate_first_step,
 )
 
-import numpy as np
-
-from renormalizer.mps.backend import xp, backend
+from renormalizer.mps.backend import np, xp, backend
 
 # Multiply steps computed from asymptotic behaviour of errors by this.
 SAFETY = 0.9

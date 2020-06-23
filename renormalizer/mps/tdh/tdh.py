@@ -217,9 +217,9 @@ def construct_H_Ham(
             iwfn += 1
 
     if debug:
-        return HAM, Etot, A_el
+        return HAM, float(Etot), A_el
     else:
-        return HAM, Etot
+        return HAM, float(Etot)
 
 
 class TdHartree(TdMpsJob):
@@ -249,6 +249,7 @@ class TdHartree(TdMpsJob):
             self.fv += len(mol.hartree_phs)
 
         super(TdHartree, self).__init__()
+        self.info_interval = np.inf
 
     def init_mps(self):
         raise NotImplementedError
@@ -472,6 +473,7 @@ class Dynamics(TdHartree):
         self, mol_list, temperature=Quantity(0, "K"), insteps=None, init_idx=0
     ):
         self._e_occupations_array = []
+        self._ph_occupations_array = []
         self.init_idx = init_idx
         super(Dynamics, self).__init__(
             mol_list, 1, "hardcore boson", "unitary", temperature, insteps
@@ -508,6 +510,16 @@ class Dynamics(TdHartree):
 
     def process_mps(self, wfn):
         self._e_occupations_array.append((wfn[0].conj()* wfn[0]).real.flatten())
+        ph_occus = []
+        for ph_wfn in wfn[1:-1]:
+            if self.temperature == 0:
+                ph_occu_array = ph_wfn.conj() * ph_wfn
+            else:
+                ph_occu_array = np.diag(ph_wfn @ ph_wfn.conj().T).real
+            assert abs(ph_occu_array.sum() - 1) < 1e-6
+            ph_occu = np.arange(len(ph_wfn)) @ ph_occu_array
+            ph_occus.append(ph_occu)
+        self._ph_occupations_array.append(ph_occus)
 
     def evolve_single_step(self, evolve_dt):
         return self._evolve_single_step(evolve_dt, self.latest_mps, 1)
@@ -515,6 +527,16 @@ class Dynamics(TdHartree):
     @property
     def e_occupations_array(self):
         return np.array(self._e_occupations_array)
+
+    @property
+    def ph_occupations_array(self):
+        return np.array(self._ph_occupations_array)
+
+    def get_dump_dict(self):
+        return {
+            "e": self._e_occupations_array,
+            "ph": self._ph_occupations_array,
+            "time series": self.evolve_times_array}
 
 
 def construct_intersiteO(mol, idxmol, j_matrixdxmol):

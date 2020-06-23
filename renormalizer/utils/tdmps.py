@@ -13,12 +13,11 @@ import numpy as np
 # this file shouldn't import anything from the `mps` module. IOW it's mps agnostic
 from renormalizer.utils.configs import EvolveConfig
 
-
 logger = logging.getLogger(__name__)
 
 
 class TdMpsJob(object):
-    def __init__(self, evolve_config: EvolveConfig = None, dump_dir: str=None, job_name: str=None):
+    def __init__(self, evolve_config: EvolveConfig = None, dump_mps: bool=False, dump_dir: str=None, job_name: str=None):
         logger.info(f"Creating TDMPS job. dump_dir: {dump_dir}. job_name: {job_name}")
         if evolve_config is None:
             logger.debug("using default evolve config")
@@ -30,6 +29,7 @@ class TdMpsJob(object):
         self.evolve_times = [0]
         # output abstract of current mps every x steps
         self.info_interval = 1
+        self.dump_mps = dump_mps
         self.dump_dir = dump_dir
         self.job_name = job_name
         mps = self.init_mps()
@@ -117,8 +117,8 @@ class TdMpsJob(object):
             
             # process
             self.evolve_times.append(self.latest_evolve_time + evolve_dt)
-            self.latest_mps = new_mps
             self.process_mps(new_mps)
+            self.latest_mps = new_mps
             
             # wall time
             evolution_wall_time = datetime.now()
@@ -157,7 +157,7 @@ class TdMpsJob(object):
     def get_dump_dict(self):
         """
 
-        :return: return a (ordered) dict to dump as json
+        :return: return a (ordered) dict to dump as json or npz
         """
         raise NotImplementedError
 
@@ -166,17 +166,24 @@ class TdMpsJob(object):
             raise ValueError("Dump dir or job name not set")
         d = self.get_dump_dict()
         os.makedirs(self.dump_dir, exist_ok=True)
-        file_path = os.path.join(self.dump_dir, self.job_name + ".json")
+        file_path = os.path.join(self.dump_dir, self.job_name + ".npz")
         bak_path = file_path + ".bak"
         if os.path.exists(file_path):
             # in case of shutdown while dumping
             if os.path.exists(bak_path):
                 os.remove(bak_path)
             os.rename(file_path, bak_path)
-        with open(file_path, "w") as fout:
-            json.dump(d, fout, indent=2)
+
+        np.savez(file_path, **d)
+
         if os.path.exists(bak_path):
             os.remove(bak_path)
+
+        # dump_mps
+        if self.dump_mps:
+            mps_path = os.path.join(self.dump_dir,
+                    self.job_name+"_mps_"+str(len(self.evolve_times)-1) + ".npz")
+            self.latest_mps.dump(mps_path)
 
     def stop_evolve_criteria(self):
         return False

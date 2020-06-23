@@ -25,8 +25,8 @@ Contents
    sbm.md
    configs.rst
    mps.rst
-   model.md
-   utils.md
+   model.rst
+   utils.rst
    develop.md
 
 

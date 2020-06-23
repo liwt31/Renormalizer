@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 # Author: Jiajun Ren <jiajunren0522@gmail.com>
-from __future__ import absolute_import, division
 
-import inspect
 import logging
-import traceback
 from typing import List, Union
 
-import numpy as np
-
 from renormalizer.model import MolList, EphTable
+from renormalizer.mps.backend import np, xp
 from renormalizer.mps import svd_qn
 from renormalizer.mps.matrix import (
     einsum,
@@ -99,7 +95,7 @@ class MatrixProduct:
 
     @property
     def bond_dims_mean(self) -> int:
-        return int(np.mean(self.bond_dims))
+        return int(round(np.mean(self.bond_dims)))
 
     @property
     def ephtable(self):
@@ -136,12 +132,12 @@ class MatrixProduct:
 
     def build_empty_qn(self):
         self.qntot = 0
-        # retain qnidx to indicate left or right canonicalise
+        # set qnidx to the right to be consistent with most MPS/MPO setups
         if self.qnidx is None:
-            self.qnidx = 0
+            self.qnidx = len(self) - 1
         self.qn = [[0] * dim for dim in self.bond_dims]
         if self.to_right is None:
-            self.to_right = True
+            self.to_right = False
 
     def build_none_qn(self):
         self.qntot = None
@@ -206,6 +202,12 @@ class MatrixProduct:
             self.to_right = True
             self.canonicalise()
 
+    def ensure_right_canon(self, rtol=1e-5, atol=1e-8):
+        if not self.check_right_canonical(rtol, atol):
+            self.move_qnidx(self.site_num - 1)
+            self.to_right = False
+            self.canonicalise()
+
     def iter_idx_list(self, full: bool, stop_idx: int=None):
         # if not `full`, the last site is omitted.
         if self.to_right:
@@ -222,7 +224,7 @@ class MatrixProduct:
             return range(self.qnidx, last, -1)
 
     def _update_ms(
-        self, idx: int, u: Matrix, vt: Matrix, sigma=None, qnlset=None, qnrset=None, m_trunc=None
+        self, idx: int, u: np.ndarray, vt: np.ndarray, sigma=None, qnlset=None, qnrset=None, m_trunc=None
     ):
         if m_trunc is None:
             m_trunc = u.shape[1]
@@ -232,21 +234,21 @@ class MatrixProduct:
             # canonicalise, vt is not unitary
             if self.is_mpo:
                 if self.to_right:
-                    norm = vt.norm()
-                    u = Matrix(u.array * norm)
-                    vt = Matrix(vt.array / norm)
+                    norm = np.linalg.norm(vt)
+                    u *= norm
+                    vt /= norm
                 else:
-                    norm = u.norm()
-                    u = Matrix(u.array / norm)
-                    vt = Matrix(vt.array * norm)
+                    norm = np.linalg.norm(u)
+                    u /= norm
+                    vt *= norm
         else:
             sigma = sigma[:m_trunc]
             if (not self.is_mpo and self.to_right) or (self.is_mpo and not self.to_right):
-                vt = einsum("i, ij -> ij", sigma, vt)
+                vt = np.einsum("i, ij -> ij", sigma, vt)
             else:
-                u = einsum("ji, i -> ji", u, sigma)
+                u = np.einsum("ji, i -> ji", u, sigma)
         if self.to_right:
-            self[idx + 1] = tensordot(vt, self[idx + 1], axes=1)
+            self[idx + 1] = tensordot(vt, self[idx + 1].array, axes=1)
             ret_mpsi = u.reshape(
                 [u.shape[0] // self[idx].pdim_prod] + list(self[idx].pdim) + [m_trunc]
             )
@@ -254,7 +256,7 @@ class MatrixProduct:
                 self.qn[idx + 1] = qnlset[:m_trunc]
                 self.qnidx = idx + 1
         else:
-            self[idx - 1] = tensordot(self[idx - 1], u, axes=1)
+            self[idx - 1] = tensordot(self[idx - 1].array, u, axes=1)
             ret_mpsi = vt.reshape(
                 [m_trunc] + list(self[idx].pdim) + [vt.shape[1] // self[idx].pdim_prod]
             )
@@ -281,28 +283,31 @@ class MatrixProduct:
             # assert self.check_right_canonical()
 
     def _get_big_qn(self, idx):
+        assert self.qnidx == idx
         mt: Matrix = self[idx]
-        sigmaqn = mt.sigmaqn
+        sigmaqn = np.array(mt.sigmaqn)
         qnl = np.array(self.qn[idx])
         qnr = np.array(self.qn[idx + 1])
-        assert len(qnl) == mt.shape[0]
-        assert len(qnr) == mt.shape[-1]
-        assert len(sigmaqn) == mt.pdim_prod
+        assert qnl.size == mt.shape[0]
+        assert qnr.size == mt.shape[-1]
+        assert sigmaqn.size == mt.pdim_prod
         if self.to_right:
             qnbigl = np.add.outer(qnl, sigmaqn)
             qnbigr = qnr
         else:
             qnbigl = qnl
             qnbigr = np.add.outer(sigmaqn, qnr)
-        return qnbigl, qnbigr
+        qnmat = np.add.outer(qnbigl, qnbigr)
+        return qnbigl, qnbigr, qnmat
 
     def add(self, other: "MatrixProduct"):
         assert self.qntot == other.qntot
         assert self.site_num == other.site_num
         assert self.qnidx == other.qnidx
 
-        # sometimes `other` is complex and `self` is real
-        new_mps = other.metacopy()
+        new_mps = self.metacopy()
+        if other.dtype == backend.complex_dtype:
+            new_mps.dtype = backend.complex_dtype
         if self.is_complex:
             new_mps.to_complex(inplace=True)
         new_mps.compress_config.update(self.compress_config)
@@ -350,9 +355,9 @@ class MatrixProduct:
         else:
             assert False
 
-        new_mps.move_qnidx(self.qnidx)
-        new_mps.to_right = self.to_right
-        new_mps.qn = [qn1 + qn2 for qn1, qn2 in zip(self.qn, new_mps.qn)]
+        new_mps.move_qnidx(other.qnidx)
+        new_mps.to_right = other.to_right
+        new_mps.qn = [qn1 + qn2 for qn1, qn2 in zip(self.qn, other.qn)]
         new_mps.qn[0] = [0]
         new_mps.qn[-1] = [0]
         if self.compress_add:
@@ -360,7 +365,7 @@ class MatrixProduct:
             new_mps.compress()
         return new_mps
 
-    def compress(self, temp_m_trunc=None):
+    def compress(self, temp_m_trunc=None, ret_s=False):
         """
         inp: canonicalise MPS (or MPO)
 
@@ -386,15 +391,16 @@ class MatrixProduct:
                 assert self.check_right_canonical()
         system = "L" if self.to_right else "R"
 
+        s_list = []
         for idx in self.iter_idx_list(full=False):
             mt: Matrix = self[idx]
             if self.to_right:
                 mt = mt.l_combine()
             else:
                 mt = mt.r_combine()
-            qnbigl, qnbigr = self._get_big_qn(idx)
+            qnbigl, qnbigr, _ = self._get_big_qn(idx)
             u, sigma, qnlset, v, sigma, qnrset = svd_qn.Csvd(
-                mt.asnumpy(),
+                mt.array,
                 qnbigl,
                 qnbigr,
                 self.qntot,
@@ -402,6 +408,7 @@ class MatrixProduct:
                 full_matrices=False,
             )
             vt = v.T
+            s_list.append(sigma)
             if temp_m_trunc is None:
                 m_trunc = self.compress_config.compute_m_trunc(
                     sigma, idx, self.to_right
@@ -409,15 +416,20 @@ class MatrixProduct:
             else:
                 m_trunc = min(temp_m_trunc, len(sigma))
             self._update_ms(
-                idx, Matrix(u), Matrix(vt), Matrix(sigma), qnlset, qnrset, m_trunc
+                idx, u, vt, sigma, qnlset, qnrset, m_trunc
             )
 
         self._switch_direction()
         compress_ratio = sz_before / self.total_bytes
         logger.debug(f"size before/after compress: {sizeof_fmt(sz_before)}/{sizeof_fmt(self.total_bytes)}, ratio: {compress_ratio}")
-        return self
+        if not ret_s:
+            # usual exit
+            return self
+        else:
+            # return singular value list
+            return self, s_list
 
-    def canonicalise(self, stop_idx: int=None):
+    def canonicalise(self, stop_idx: int=None, normalize=False):
         # stop_idx: mix canonical site at `stop_idx`
         for idx in self.iter_idx_list(full=False, stop_idx=stop_idx):
             mt: Matrix = self[idx]
@@ -426,10 +438,10 @@ class MatrixProduct:
                 mt = mt.l_combine()
             else:
                 mt = mt.r_combine()
-            qnbigl, qnbigr = self._get_big_qn(idx)
+            qnbigl, qnbigr, _ = self._get_big_qn(idx)
             system = "L" if self.to_right else "R"
             u, qnlset, v, qnrset = svd_qn.Csvd(
-                mt.asnumpy(),
+                mt.array,
                 qnbigl,
                 qnbigr,
                 self.qntot,
@@ -437,8 +449,11 @@ class MatrixProduct:
                 system=system,
                 full_matrices=False,
             )
+            if normalize:
+                # roughly normalize. Used when the each site of the mps is scaled such as in exact thermal prop
+                v /= np.linalg.norm(v[:, 0])
             self._update_ms(
-                idx, Matrix(u), Matrix(v.T), sigma=None, qnlset=qnlset, qnrset=qnrset
+                idx, u, v.T, sigma=None, qnlset=qnlset, qnrset=qnrset
             )
         # can't iter to idx == 0 or idx == self.site_num - 1
         if (not self.to_right and idx == 1) or (self.to_right and idx == self.site_num - 2):
@@ -454,30 +469,30 @@ class MatrixProduct:
             new_mp[idx] = mt.conj()
         return new_mp
 
-    def dot(self, other):
+    def dot(self, other: "MatrixProduct") -> complex:
         """
-        dot product of two mps / mpo 
+        dot product of two mps / mpo
         """
 
         assert len(self) == len(other)
-        e0 = eye(1, 1)
+        e0 = xp.eye(1, 1)
         # for debugging. It has little computational cost anyway
         debug_t = []
         for mt1, mt2 in zip(self, other):
             # sum_x e0[:,x].m[x,:,:]
             debug_t.append(e0)
-            e0 = tensordot(e0, mt2, 1)
+            e0 = tensordot(e0, mt2.array, 1)
             # sum_ij e0[i,p,:] self[i,p,:]
             # note, need to flip a (:) index onto top,
             # therefore take transpose
             if mt1.ndim == 3:
-                e0 = tensordot(e0, mt1, ([0, 1], [0, 1])).T
+                e0 = tensordot(e0, mt1.array, ([0, 1], [0, 1])).T
             elif mt1.ndim == 4:
-                e0 = tensordot(e0, mt1, ([0, 1, 2], [0, 1, 2])).T
+                e0 = tensordot(e0, mt1.array, ([0, 1, 2], [0, 1, 2])).T
             else:
                 assert False
 
-        return e0[0, 0]
+        return complex(e0[0, 0])
 
     def angle(self, other):
         return abs(self.conj().dot(other))
@@ -488,28 +503,10 @@ class MatrixProduct:
         # regards 1+0j as complex. The former is the desired behavior
         if np.iscomplex(val):
             new_mp.to_complex(inplace=True)
-            # no need to care about negative because no `abs` will be done
-            negative = False
         else:
             val = val.real
-            negative = val < 0
-            val = abs(val)
-        # Note matrices are read-only
-        # there are two ways to do the scaling
-        if np.abs(np.log(np.abs(val))) < 0.01:
-            # Thr first way. The operation performs very quickly,
-            # but leads to high float point error when val is very large or small
-            # val = 2 is considered as very large because the normalization can
-            # be done successively
-            assert new_mp[self.qnidx].array.any()
-            new_mp[self.qnidx] = new_mp[self.qnidx] * val
-        else:
-            # The second way. High time complexity but numerically more feasible.
-            root_val = val ** (1 / len(self))
-            for idx, mt in enumerate(self):
-                new_mp[idx] = mt * root_val
-        if negative:
-            new_mp[0] *= -1
+        assert new_mp[self.qnidx].array.any()
+        new_mp[self.qnidx] = new_mp[self.qnidx] * val
         return new_mp
 
     def to_complex(self, inplace=False):
@@ -522,24 +519,24 @@ class MatrixProduct:
             if mt is None:
                 # dummy mt after metacopy. Bad idea. Remove the dummy thing when feasible
                 continue
-            new_mp[i] = mt.to_complex(inplace)
+            new_mp[i] = mt.to_complex()
         return new_mp
 
-    def distance(self, other):
-        l1 = self.conj().dot(self) 
+    def distance(self, other) -> float:
+        l1 = self.conj().dot(self)
         l2 = other.conj().dot(other)
         l1dotl2 = self.conj().dot(other)
         dis_square = (l1 + l2
             - l1dotl2
-            - l1dotl2.conj()).real 
-        
+            - l1dotl2.conjugate()).real
+
         if dis_square < 0:
             assert dis_square/l1.real < 1e-8
             res = 0.
         else:
-            res = np.sqrt(dis_square)
-        
-        return res
+            res = np.sqrt(dis_square).item()
+
+        return float(res)
 
     def copy(self):
         new = self.metacopy()
@@ -569,12 +566,15 @@ class MatrixProduct:
         if isinstance(array, Matrix):
             mt = array.astype(self.dtype)
         else:
-            mt = Matrix.interned(array, self.is_mpo, dtype=self.dtype)
+            mt = Matrix(array, dtype=self.dtype)
         if self.use_dummy_qn:
             mt.sigmaqn = np.zeros(mt.pdim_prod, dtype=np.int)
         else:
             mt.sigmaqn = self._get_sigmaqn(idx)
         return mt
+    
+    def build_empty_mp(self, num):
+        self._mp = [[None]] * num
 
     @property
     def total_bytes(self):
@@ -605,6 +605,7 @@ class MatrixProduct:
         return iter(self._mp)
 
     def __len__(self):
+        # The same semantic with `list`
         return len(self._mp)
 
     def __mul__(self, other):

@@ -3,24 +3,24 @@
 # finite temperature absorption/emission spectrum based on Correction vector
 
 from renormalizer.mps.matrix import (
-    Matrix,
     multi_tensor_contract,
     tensordot,
-    ones,
     moveaxis
 )
 from renormalizer.cv.spectra_cv import SpectraCv
+from renormalizer.mps.backend import np, xp
+from renormalizer.mps.matrix import asxp, asnumpy
 from renormalizer.mps import (Mpo, svd_qn, MpDm, ThermalProp)
 from renormalizer.mps.lib import update_cv
 from renormalizer.utils import (
     CompressConfig, EvolveConfig,
-    CompressCriteria, EvolveMethod
+    CompressCriteria
 )
 import copy
 import os
 import logging
-import numpy as np
 import scipy
+import itertools
 
 logger = logging.getLogger(__name__)
 
@@ -58,12 +58,16 @@ class SpectraFtCV(SpectraCv):
     >>> from renormalizer.tests.parameter import mol_list
     >>> import numpy as np
     >>> from renormalizer.utils import Quantity
-    >>> freq_reg = np.arange(0.08, 0.10, 5.e-4).tolist()
-    >>> T = Quantity(298, unit='K')
-    >>> spectra = SpectraFtCV(mol_list, "abs", T, test_freq, 10, 1.e-3, cores=1)
-    >>> spectra.init_oper()
-    >>> spectra.init_mps()
-    >>> result = spectra.run()
+    >>> def run():
+    ...     freq_reg = np.arange(0.08, 0.10, 5.e-4).tolist()
+    ...     T = Quantity(298, unit='K')
+    ...     spectra = SpectraFtCV(mol_list, "abs", T, test_freq,
+    ...                           10, 1.e-3, cores=1)
+    ...     spectra.init_oper()
+    ...     spectra.init_mps()
+    ...     result = spectra.run()
+    >>> if __name__ == "__main__":
+    ...     run()
     '''
     def __init__(
         self,
@@ -124,15 +128,16 @@ class SpectraFtCV(SpectraCv):
             self._defined_output_path = tp._defined_output_path
             if tp._defined_output_path:
                 try:
-                    logger.info(f"load density matrix from {self._thermal_dump_path}")
+                    logger.info(
+                        f"load density matrix from {self._thermal_dump_path}"
+                    )
                     ket_mpo = MpDm.load(self.mol_list, self._thermal_dump_path)
                     logger.info(f"density matrix loaded: {ket_mpo}")
                 except FileNotFoundError:
                     logger.debug(f"no file found in {self._thermal_dump_path}")
                     tp.evolve(None, self.insteps, beta / 2j)
                     ket_mpo = tp.latest_mps
-        if tp._defined_output_path:
-            ket_mpo.dump(self._thermal_dump_path)
+                    ket_mpo.dump(self._thermal_dump_path)
         self.a_ket_mpo = dipole_mpo.apply(ket_mpo, canonicalise=True)
         self.cv_mpo = Mpo.finiteT_cv(self.mol_list, 1, self.m_max,
                                      self.spectratype, percent=1.0)
@@ -168,24 +173,24 @@ class SpectraFtCV(SpectraCv):
 
         if self.method == "1site":
             add_list = [isite - 1]
-            first_L = first_LR[isite - 1]
-            first_R = first_LR[isite]
-            second_L = second_LR[isite - 1]
-            second_R = second_LR[isite]
-            third_L = third_LR[isite - 1]
-            third_R = third_LR[isite]
-            forth_L = forth_LR[isite - 1]
-            forth_R = forth_LR[isite]
+            first_L = asxp(first_LR[isite - 1])
+            first_R = asxp(first_LR[isite])
+            second_L = asxp(second_LR[isite - 1])
+            second_R = asxp(second_LR[isite])
+            third_L = asxp(third_LR[isite - 1])
+            third_R = asxp(third_LR[isite])
+            forth_L = asxp(forth_LR[isite - 1])
+            forth_R = asxp(forth_LR[isite])
         else:
             add_list = [isite - 2, isite - 1]
-            first_L = first_LR[isite - 2]
-            first_R = first_LR[isite]
-            second_L = second_LR[isite - 2]
-            second_R = second_LR[isite]
-            third_L = third_LR[isite - 2]
-            third_R = third_LR[isite]
-            forth_L = forth_LR[isite - 2]
-            forth_R = forth_LR[isite]
+            first_L = asxp(first_LR[isite - 2])
+            first_R = asxp(first_LR[isite])
+            second_L = asxp(second_LR[isite - 2])
+            second_R = asxp(second_LR[isite])
+            third_L = asxp(third_LR[isite - 2])
+            third_R = asxp(third_LR[isite])
+            forth_L = asxp(forth_LR[isite - 2])
+            forth_R = asxp(forth_LR[isite])
 
         xqnmat, xqnbigl, xqnbigr, xshape = \
             self.construct_X_qnmat(add_list, direction)
@@ -222,46 +227,49 @@ class SpectraFtCV(SpectraCv):
                 path_4, forth_L,
                 moveaxis(self.a_ket_mpo[isite - 1], (1, 2), (2, 1)),
                 forth_R)
-            vecb = - self.eta * vecb.asnumpy()
+            vecb = - self.eta * vecb
 
+        a_oper_isite = asxp(self.a_oper[isite - 1])
+        b_oper_isite = asxp(self.b_oper[isite - 1])
+        h_mpo_isite = asxp(self.h_mpo[isite - 1])
         # construct preconditioner
-        Idt = np.identity(self.h_mpo[isite - 1].shape[1])
-        M1_1 = np.einsum('aea->ae', first_L)
-        M1_2 = np.einsum('eccf->ecf', self.a_oper[isite - 1])
-        M1_3 = np.einsum('dfd->df', first_R)
-        M1_4 = np.einsum('bb->b', Idt)
+        Idt = xp.identity(h_mpo_isite.shape[1])
+        M1_1 = xp.einsum('aea->ae', first_L)
+        M1_2 = xp.einsum('eccf->ecf', a_oper_isite)
+        M1_3 = xp.einsum('dfd->df', first_R)
+        M1_4 = xp.einsum('bb->b', Idt)
         path_m1 = [([0, 1], "ae,b->aeb"),
                    ([2, 0], "aeb,ecf->abcf"),
                    ([1, 0], "abcf, df->abcd")]
         pre_M1 = multi_tensor_contract(
-            path_m1, Matrix(M1_1), Matrix(M1_4), Matrix(M1_2), Matrix(M1_3))
-        pre_M1 = pre_M1.asnumpy()[
+            path_m1, M1_1, M1_4, M1_2, M1_3)
+        pre_M1 = pre_M1[
             self.condition(dag_qnmat, [down_exciton, up_exciton])]
 
-        M2_1 = np.einsum('aeag->aeg', second_L)
-        M2_2 = np.einsum('eccf->ecf', self.b_oper[isite-1])
-        M2_3 = np.einsum('gbbh->gbh', self.h_mpo[isite-1])
-        M2_4 = np.einsum('dfdh->dfh', second_R)
+        M2_1 = xp.einsum('aeag->aeg', second_L)
+        M2_2 = xp.einsum('eccf->ecf', b_oper_isite)
+        M2_3 = xp.einsum('gbbh->gbh', h_mpo_isite)
+        M2_4 = xp.einsum('dfdh->dfh', second_R)
         path_m2 = [([0, 1], "aeg,gbh->aebh"),
                    ([2, 0], "aebh,ecf->abchf"),
                    ([1, 0], "abhcf,dfh->abcd")]
         pre_M2 = multi_tensor_contract(
-            path_m2, Matrix(M2_1), Matrix(M2_3), Matrix(M2_2), Matrix(M2_4))
-        pre_M2 = pre_M2.asnumpy()[
+            path_m2, M2_1, M2_3, M2_2, M2_4)
+        pre_M2 = pre_M2[
             self.condition(dag_qnmat, [down_exciton, up_exciton])]
 
-        M4_1 = np.einsum('faah->fah', third_L)
-        M4_4 = np.einsum('gddi->gdi', third_R)
-        M4_5 = np.einsum('cc->c', Idt)
+        M4_1 = xp.einsum('faah->fah', third_L)
+        M4_4 = xp.einsum('gddi->gdi', third_R)
+        M4_5 = xp.einsum('cc->c', Idt)
         M4_path = [([0, 1], "fah,febg->ahebg"),
                    ([2, 0], "ahebg,hjei->abgji"),
                    ([1, 0], "abgji,gdi->abjd")]
         pre_M4 = multi_tensor_contract(
-            M4_path, Matrix(M4_1), self.h_mpo[isite-1],
-            self.h_mpo[isite-1], Matrix(M4_4))
-        pre_M4 = np.einsum('abbd->abd', pre_M4.asnumpy())
-        pre_M4 = np.tensordot(pre_M4, M4_5, axes=0)
-        pre_M4 = np.moveaxis(pre_M4, [2, 3], [3, 2])[
+            M4_path, M4_1, h_mpo_isite,
+            h_mpo_isite, M4_4)
+        pre_M4 = xp.einsum('abbd->abd', pre_M4)
+        pre_M4 = xp.tensordot(pre_M4, M4_5, axes=0)
+        pre_M4 = xp.moveaxis(pre_M4, [2, 3], [3, 2])[
             self.condition(dag_qnmat, [down_exciton, up_exciton])]
 
         pre_M = (pre_M1 + 2 * pre_M2 + pre_M4)
@@ -269,39 +277,40 @@ class SpectraFtCV(SpectraCv):
         indices = np.array(range(nonzeros))
         indptr = np.array(range(nonzeros+1))
         pre_M = scipy.sparse.csc_matrix(
-            (pre_M, indices, indptr), shape=(nonzeros, nonzeros))
+            (asnumpy(pre_M), indices, indptr), shape=(nonzeros, nonzeros))
 
         M_x = lambda x: scipy.sparse.linalg.spsolve(pre_M, x)
         M = scipy.sparse.linalg.LinearOperator((nonzeros, nonzeros), M_x)
 
-        count = [0]
+        count = 0
 
         def hop(x):
-            count[0] += 1
-            dag_struct = self.dag2mat(
-                xshape, x, dag_qnmat, direction)
+            nonlocal count
+            count += 1
+            dag_struct = asxp(self.dag2mat(
+                xshape, x, dag_qnmat, direction))
             if self.method == "1site":
-                #
+
                 M1 = multi_tensor_contract(
-                    path_1, first_L, Matrix(dag_struct),
-                    self.a_oper[isite - 1], first_R)
+                    path_1, first_L, dag_struct,
+                    a_oper_isite, first_R)
                 M2 = multi_tensor_contract(
-                    path_2, second_L, Matrix(dag_struct),
-                    self.b_oper[isite - 1],
-                    self.h_mpo[isite - 1], second_R)
-                M2 = moveaxis(M2, (1, 2), (2, 1))
+                    path_2, second_L, dag_struct,
+                    b_oper_isite,
+                    h_mpo_isite, second_R)
+                M2 = xp.moveaxis(M2, (1, 2), (2, 1))
                 M3 = multi_tensor_contract(
-                    path_2, third_L, self.h_mpo[isite - 1], Matrix(dag_struct),
-                    self.h_mpo[isite - 1], third_R)
-                M3 = moveaxis(M3, (1, 2), (2, 1))
+                    path_2, third_L, h_mpo_isite, dag_struct,
+                    h_mpo_isite, third_R)
+                M3 = xp.moveaxis(M3, (1, 2), (2, 1))
                 cout = M1 + 2 * M2 + M3
             cout = cout[
                 self.condition(dag_qnmat, [down_exciton, up_exciton])
             ].reshape(nonzeros, 1)
-            return cout
+            return asnumpy(cout)
 
         # Matrix A and Vector b
-        vecb = vecb[
+        vecb = asnumpy(vecb)[
             self.condition(dag_qnmat, [down_exciton, up_exciton])
         ].reshape(nonzeros, 1)
         mata = scipy.sparse.linalg.LinearOperator((nonzeros, nonzeros),
@@ -316,8 +325,8 @@ class SpectraFtCV(SpectraCv):
             x, info = scipy.sparse.linalg.cg(
                 mata, vecb, tol=1.e-5, x0=guess, maxiter=500, M=M, atol=0)
         # logger.info(f"linear eq dim: {nonzeros}")
-        # logger.info(f'times for hop:{count[0]}')
-        self.hop_time.append(count[0])
+        # logger.info(f'times for hop:{count}')
+        self.hop_time.append(count)
         if info != 0:
             logger.warning(
                 f"cg not converged, vecb.norm:{np.linalg.norm(vecb)}")
@@ -426,86 +435,49 @@ class SpectraFtCV(SpectraCv):
         return xqnmat, xqnbigl, xqnbigr, xshape
 
     def swap(self, mat, qnbigl, qnbigr, direction):
-        list_mat = mat.ravel()
-        dag_qnmat = []
-        for i in range(0, len(list_mat), 2):
-            dag_qnmat.append([list_mat[i + 1], list_mat[i]])
-        dag_qnmat = np.array(dag_qnmat).reshape(mat.shape)
+
+        def inter_change(ori_mat):
+            matshape = ori_mat.shape
+            len_mat = int(np.prod(np.array(matshape[:-1])))
+            ori_mat = ori_mat.reshape(len_mat, 2)
+            change_mat = copy.deepcopy(ori_mat)
+            change_mat[:, 0], change_mat[:, 1] = ori_mat[:, 1], ori_mat[:, 0]
+            return change_mat.reshape(matshape)
+
+        dag_qnmat = inter_change(mat)
         if self.method == "1site":
             dag_qnmat = np.moveaxis(dag_qnmat, [1, 2], [2, 1])
+            dag_qnbigl = inter_change(qnbigl)
+            dag_qnbigr = inter_change(qnbigr)
             if direction == "left":
-                list_qnbigl = qnbigl.ravel()
-                dag_qnbigl = []
-                for i in range(0, len(list_qnbigl), 2):
-                    dag_qnbigl.append([list_qnbigl[i + 1], list_qnbigl[i]])
-                dag_qnbigl = np.array(dag_qnbigl)
-                list_qnbigr = qnbigr.ravel()
-                dag_qnbigr = []
-                for i in range(0, len(list_qnbigr), 2):
-                    dag_qnbigr.append([list_qnbigr[i + 1], list_qnbigr[i]])
-                dag_qnbigr = np.array(dag_qnbigr).reshape(qnbigr.shape)
                 dag_qnbigr = np.moveaxis(dag_qnbigr, [0, 1], [1, 0])
             else:
-
-                list_qnbigr = qnbigr.ravel()
-                dag_qnbigr = []
-                for i in range(0, len(list_qnbigr), 2):
-                    dag_qnbigr.append([list_qnbigr[i + 1], list_qnbigr[i]])
-                dag_qnbigr = np.array(dag_qnbigr)
-
-                list_qnbigl = qnbigl.ravel()
-                dag_qnbigl = []
-                for i in range(0, len(list_qnbigl), 2):
-                    dag_qnbigl.append([list_qnbigl[i + 1], list_qnbigl[i]])
-                dag_qnbigl = np.array(dag_qnbigl).reshape(qnbigl.shape)
                 dag_qnbigl = np.moveaxis(dag_qnbigl, [1, 2], [2, 1])
         else:
-            dag_qnmat = np.moveaxis(dag_qnmat, [1, 2, 3, 4], [2, 1, 4, 3])
-            list_qnbigl = qnbigl.ravel()
-            dag_qnbigl = []
-            for i in range(0, len(list_qnbigl), 2):
-                dag_qnbigl.append([list_qnbigl[i + 1], list_qnbigl[i]])
-            dag_qnbigl = np.array(dag_qnbigl).reshape(qnbigl.shape)
-            dag_qnbigl = np.moveaxis(dag_qnbigl, [1, 2], [2, 1])
-            list_qnbigr = qnbigr.ravel()
-            dag_qnbigr = []
-            for i in range(0, len(list_qnbigr), 2):
-                dag_qnbigr.append([list_qnbigr[i + 1], list_qnbigr[i]])
-            dag_qnbigr = np.array(dag_qnbigr).reshape(qnbigr.shape)
-            dag_qnbigr = np.moveaxis(dag_qnbigr, [0, 1], [1, 0])
+            raise NotImplementedError
+            # we don't recommend 2-site CV-DMRG, which is a huge cost
 
         return dag_qnmat, dag_qnbigl, dag_qnbigr
 
     def condition(self, mat, qn):
-
-        list_qnmat = np.array(mat == qn).ravel()
-        mat_shape = list(mat.shape)
+        condition = (mat == qn)
+        mat_shape = list(condition.shape)
         del mat_shape[-1]
-        condition = []
-        for i in range(0, len(list_qnmat), 2):
-            if (list_qnmat[i] == 0) or (list_qnmat[i + 1] == 0):
-                condition.append(False)
-            else:
-                condition.append(True)
-        condition = np.array(condition)
+        condition = condition.all(axis=-1)
         condition = condition.reshape(mat_shape)
         return condition
 
     def qnmat_add(self, mat_l, mat_r):
-
-        list_matl = mat_l.ravel()
-        list_matr = mat_r.ravel()
-        matl = []
-        matr = []
-        lr = []
-        for i in range(0, len(list_matl), 2):
-            matl.append([list_matl[i], list_matl[i + 1]])
-        for i in range(0, len(list_matr), 2):
-            matr.append([list_matr[i], list_matr[i + 1]])
-        for i in range(len(matl)):
-            for j in range(len(matr)):
-                lr.append(np.add(matl[i], matr[j]))
-        lr = np.array(lr)
+        lshape, rshape = mat_l.shape, mat_r.shape
+        lena = int(np.prod(np.array(lshape)) / 2)
+        lenb = int(np.prod(np.array(rshape)) / 2)
+        matl = mat_l.reshape(lena, 2)
+        matr = mat_r.reshape(lenb, 2)
+        lr1 = np.add.outer(matl[:, 0], matr[:, 0]).flatten()
+        lr2 = np.add.outer(matl[:, 1], matr[:, 1]).flatten()
+        lr = np.zeros((len(lr1), 2))
+        lr[:, 0] = lr1
+        lr[:, 1] = lr2
         shapel = list(mat_l.shape)
         del shapel[-1]
         shaper = list(mat_r.shape)
@@ -629,46 +601,46 @@ class SpectraFtCV(SpectraCv):
 
     def initialize_LR(self, direction):
 
-        first_LR = [ones((1, 1, 1))]
-        second_LR = [ones((1, 1, 1, 1))]
-        forth_LR = [ones((1, 1))]
+        first_LR = [np.ones((1, 1, 1))]
+        second_LR = [np.ones((1, 1, 1, 1))]
+        forth_LR = [np.ones((1, 1))]
         for isite in range(1, len(self.cv_mpo)):
             first_LR.append(None)
             second_LR.append(None)
             forth_LR.append(None)
-        first_LR.append(ones((1, 1, 1)))
-        second_LR.append(ones((1, 1, 1, 1)))
+        first_LR.append(np.ones((1, 1, 1)))
+        second_LR.append(np.ones((1, 1, 1, 1)))
         third_LR = copy.deepcopy(second_LR)
-        forth_LR.append(ones((1, 1)))
+        forth_LR.append(np.ones((1, 1)))
 
         if direction == "right":
             for isite in range(len(self.cv_mpo), 1, -1):
                 path1 = [([0, 1], "abc, defa -> bcdef"),
                          ([2, 0], "bcdef, gfhb -> cdegh"),
                          ([1, 0], "cdegh, ihec -> dgi")]
-                first_LR[isite - 1] = multi_tensor_contract(
+                first_LR[isite - 1] = asnumpy(multi_tensor_contract(
                     path1, first_LR[isite],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.a_oper[isite - 1], self.cv_mpo[isite - 1])
+                    self.a_oper[isite - 1], self.cv_mpo[isite - 1]))
                 path2 = [([0, 1], "abcd, efga -> bcdefg"),
                          ([3, 0], "bcdefg, hgib -> cdefhi"),
                          ([2, 0], "cdefhi, jikc -> defhjk"),
                          ([1, 0], "defhjk, lkfd -> ehjl")]
                 path4 = [([0, 1], "ab, cdea->bcde"),
                          ([1, 0], "bcde, fedb->cf")]
-                second_LR[isite - 1] = multi_tensor_contract(
+                second_LR[isite - 1] = asnumpy(multi_tensor_contract(
                     path2, second_LR[isite],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
                     self.b_oper[isite - 1], self.cv_mpo[isite - 1],
-                    self.h_mpo[isite - 1])
-                third_LR[isite - 1] = multi_tensor_contract(
+                    self.h_mpo[isite - 1]))
+                third_LR[isite - 1] = asnumpy(multi_tensor_contract(
                     path2, third_LR[isite], self.h_mpo[isite - 1],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.cv_mpo[isite - 1], self.h_mpo[isite - 1])
-                forth_LR[isite - 1] = multi_tensor_contract(
+                    self.cv_mpo[isite - 1], self.h_mpo[isite - 1]))
+                forth_LR[isite - 1] = asnumpy(multi_tensor_contract(
                     path4, forth_LR[isite],
                     moveaxis(self.a_ket_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.cv_mpo[isite - 1])
+                    self.cv_mpo[isite - 1]))
 
         if direction == "left":
 
@@ -676,29 +648,29 @@ class SpectraFtCV(SpectraCv):
                 path1 = [([0, 1], "abc, adef -> bcdef"),
                          ([2, 0], "bcdef, begh -> cdfgh"),
                          ([1, 0], "cdfgh, cgdi -> fhi")]
-                first_LR[isite] = multi_tensor_contract(
+                first_LR[isite] = asnumpy(multi_tensor_contract(
                     path1, first_LR[isite - 1],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.a_oper[isite - 1], self.cv_mpo[isite - 1])
+                    self.a_oper[isite - 1], self.cv_mpo[isite - 1]))
                 path2 = [([0, 1], "abcd, aefg -> bcdefg"),
                          ([3, 0], "bcdefg, bfhi -> cdeghi"),
                          ([2, 0], "cdeghi, chjk -> degijk"),
                          ([1, 0], "degijk, djel -> gikl")]
                 path4 = [([0, 1], "ab, acde->bcde"),
                          ([1, 0], "bcde, bdcf->ef")]
-                second_LR[isite] = multi_tensor_contract(
+                second_LR[isite] = asnumpy(multi_tensor_contract(
                     path2, second_LR[isite - 1],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
                     self.b_oper[isite - 1], self.cv_mpo[isite - 1],
-                    self.h_mpo[isite - 1])
-                third_LR[isite] = multi_tensor_contract(
+                    self.h_mpo[isite - 1]))
+                third_LR[isite] = asnumpy(multi_tensor_contract(
                     path2, third_LR[isite - 1], self.h_mpo[isite - 1],
                     moveaxis(self.cv_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.cv_mpo[isite - 1], self.h_mpo[isite - 1])
-                forth_LR[isite] = multi_tensor_contract(
+                    self.cv_mpo[isite - 1], self.h_mpo[isite - 1]))
+                forth_LR[isite] = asnumpy(multi_tensor_contract(
                     path4, forth_LR[isite - 1],
                     moveaxis(self.a_ket_mpo[isite - 1], (1, 2), (2, 1)),
-                    self.cv_mpo[isite - 1])
+                    self.cv_mpo[isite - 1]))
         return [first_LR, second_LR, third_LR, forth_LR]
 
     def update_LR(self, lr_group, direction, isite):
@@ -761,8 +733,8 @@ class SpectraFtCV(SpectraCv):
                     moveaxis(self.a_ket_mpo[isite - 1], (1, 2), (2, 1)),
                     self.cv_mpo[isite - 1])
         else:
-            pass
-        # 2site for finite temperature is too expensive, so I drop it
-        # (at least for now)
+            # 2site for finite temperature is too expensive, so I drop it
+            # (at least for now)
+            raise NotImplementedError
 
         return first_LR, second_LR, third_LR, forth_LR

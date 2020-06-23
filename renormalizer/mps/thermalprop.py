@@ -5,8 +5,7 @@ import numpy as np
 from renormalizer.mps import MpDm, Mpo
 from renormalizer.mps.tdh import unitary_propagation
 from renormalizer.utils import TdMpsJob, Quantity, EvolveConfig
-from renormalizer.utils.utils import cast_float
-
+from renormalizer.property import Property
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +27,10 @@ class ThermalProp(TdMpsJob):
             If set to ``"EX"``, then the exact propagation is performed in one exciton space,
             i.e. the vibrations are regarded as displaced oscillators.
         evolve_config (:class:`~renormalizer.utils.EvolveConfig`): config when evolving the MpDm in imaginary time.
+        dump_mps (bool): if dump mps when dumping
         dump_dir (str): the directory for logging and numerical result output.
         job_name (str): the name of the calculation job which determines the file name of the logging and numerical result output.
-
+        properties (:class:`~renormalizer.property.Property`) calculate other properties with interface in Property
     """
     def __init__(
         self,
@@ -39,10 +39,13 @@ class ThermalProp(TdMpsJob):
         exact: bool = False,
         space: str = "GS",
         evolve_config: EvolveConfig = None,
+        dump_mps: bool = False, 
         dump_dir: str = None,
         job_name: str = None,
+        properties: Property = None,
+        auto_expand: bool = True,
     ):
-        self.init_mpdm: MpDm = init_mpdm
+        self.init_mpdm: MpDm = init_mpdm.canonicalise()
         self.h_mpo = h_mpo
         self.exact = exact
         assert space in ["GS", "EX"]
@@ -50,11 +53,16 @@ class ThermalProp(TdMpsJob):
         self.energies = []
         self._e_occupations_array = []
         self._ph_occupations_array = []
-        super().__init__(evolve_config, dump_dir, job_name)
+        self._vn_entropy_array = []
+        self.properties = properties
+        self.auto_expand = auto_expand
+
+        super().__init__(evolve_config=evolve_config, dump_mps=dump_mps, dump_dir=dump_dir,
+                job_name=job_name)
 
     def init_mps(self):
         self.init_mpdm.evolve_config = self.evolve_config
-        if self.evolve_config.is_tdvp:
+        if self.evolve_config.is_tdvp and self.auto_expand:
             self.init_mpdm = self.init_mpdm.expand_bond_dimension(self.h_mpo)
         return self.init_mpdm
 
@@ -69,9 +77,16 @@ class ThermalProp(TdMpsJob):
             logger.info(f"{attr_str}: {attr}")
             self_array = getattr(self, f"_{attr_str}_array")
             self_array.append(attr)
+        vn_entropy = mps.calc_vn_entropy()
+        self._vn_entropy_array.append(vn_entropy)
+        logger.info(f"vn entropy: {vn_entropy}")
         logger.info(
             f"Energy: {new_energy}, total electron: {self._e_occupations_array[-1].sum()}"
         )
+        
+        # calculate other properties defined in Property
+        if self.properties is not None:
+            self.properties.calc_properties(mps)
 
     def evolve_exact(self, old_mpdm, evolve_dt):
         MPOprop, HAM, Etot = old_mpdm.hybrid_exact_propagator(
@@ -81,10 +96,8 @@ class ThermalProp(TdMpsJob):
         unitary_propagation(new_mpdm.tdh_wfns, HAM, Etot, evolve_dt)
         # partition function can't be obtained. It's not practical anyway.
         # The function is too large to be fit into float64 even float128
+        new_mpdm.canonicalise(normalize=True)
         new_mpdm.normalize(1.0)
-        # the mpdm may not be canonicalised due to distributed scaling. It's not wise to do
-        # so currently because scheme4 might have empty matrices
-        # new_mpdm.canonicalise()
         return new_mpdm
 
     def evolve_prop(self, old_mpdm, evolve_dt):
@@ -114,12 +127,22 @@ class ThermalProp(TdMpsJob):
     def ph_occupations_array(self):
         return np.array(self._ph_occupations_array)
 
+    @property
+    def vn_entropy_array(self):
+        return np.array(self._vn_entropy_array)
+
     def get_dump_dict(self):
         dump_dict = dict()
         dump_dict["time series"] = [-t.imag for t in self.evolve_times]
         dump_dict["energies"] = self.energies
-        dump_dict["electron occupations array"] = cast_float(self.e_occupations_array)
-        dump_dict["phonon occupations array"] = cast_float(self.ph_occupations_array)
+        dump_dict["electron occupations array"] = self.e_occupations_array.tolist()
+        dump_dict["phonon occupations array"] = self.ph_occupations_array.tolist()
+        dump_dict["vn entropy array"] = self.vn_entropy_array.tolist()
+        
+        if self.properties is not None:
+            for prop_str in self.properties.prop_res.keys():
+                dump_dict[prop_str] = self.properties.prop_res[prop_str]
+
         return dump_dict
 
 
