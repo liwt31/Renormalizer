@@ -79,6 +79,9 @@ class BasisSet:
         else:
             return (self.dof,)
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.__dict__ == other.__dict__
+
 
 class BasisSHO(BasisSet):
     """
@@ -443,22 +446,24 @@ class BasisHalfSpin(BasisSet):
         
         if len(op_symbol) == 1:       
             op_symbol = op_symbol[0]
-            # Todo: the string itself may sometimes consume a lot of memory when
-            # the number of terms in O is very huge
-            # replace sigma_x with s_x in the future
             if op_symbol == "I":
                 mat = np.eye(2)
             elif op_symbol == "sigma_x":
                 mat = np.diag([1.], k=1)
+                mat = mat + mat.T.conj()
+            elif op_symbol == "S_x":
+                mat = np.diag([0.5], k=1)
                 mat = mat + mat.T.conj()
             elif op_symbol == "sigma_y":
                 mat = np.diag([-1.0j], k=1)
                 mat = mat + mat.T.conj()
             elif op_symbol == "sigma_z":
                 mat = np.diag([1.,-1.], k=0)
-            elif op_symbol == "sigma_-":
+            elif op_symbol == "S_z":
+                mat = np.diag([0.5, -0.5])
+            elif op_symbol == "sigma_-" or op_symbol == "S_-":
                 mat = np.diag([1.], k=-1)
-            elif op_symbol == "sigma_+":
+            elif op_symbol == "sigma_+" or op_symbol == "S_+":
                 mat = np.diag([1.,], k=1)
             else:
                 raise ValueError(f"op_symbol:{op_symbol} is not supported")

@@ -14,11 +14,21 @@ sentinel = xp.ones((1, 1, 1), dtype=backend.real_dtype)
 
 
 class Environ:
-    def __init__(self, mps, mpo, domain=None, mps_conj=None):
+    def __init__(self, mps, mpo, domain=None, mps_conj=None, left_sentinal=None, right_sentinal=None):
         # todo: real disk and other backend
         # idx indicates the exact position of L or R, like
         # L(idx-1) - mpo(idx) - R(idx+1)
         self._virtual_disk = {}
+        if left_sentinal is None:
+            self.left_sentinal = sentinel
+        else:
+            self.left_sentinal = left_sentinal
+        self.write("L", -1, self.left_sentinal)
+        if right_sentinal is None:
+            self.right_sentinal = sentinel
+        else:
+            self.right_sentinal = right_sentinal
+        self.write("R", len(mps), self.right_sentinal)
         self._construct(mps, mpo, domain, mps_conj)
 
     def _construct(self, mps, mpo, domain=None, mps_conj=None):
@@ -32,26 +42,20 @@ class Environ:
             self._construct(mps, mpo, "L", mps_conj)
             self._construct(mps, mpo, "R", mps_conj)
             return
-        if domain == "L":
-            start, end, inc = 0, len(mps) - 1, 1
-        else:
-            start, end, inc = len(mps) - 1, 0, -1
-        self.write_l_sentinel(mps)
-        self.write_r_sentinel(mps)
 
-        tensor = sentinel
+        if domain == "L":
+            start, end, inc = 0, len(mps), 1
+            tensor = self.left_sentinal
+        else:
+            start, end, inc = len(mps) - 1, -1, -1
+            tensor = self.right_sentinal
+
         for idx in range(start, end, inc):
             tensor = contract_one_site(tensor, mps[idx], mpo[idx], domain, ms_conj=mps_conj[idx])
             self.write(domain, idx, tensor)
 
-    def write_l_sentinel(self, mps):
-        self.write("L", -1, sentinel)
-
-    def write_r_sentinel(self, mps):
-        self.write("R", len(mps), sentinel)
-
     def GetLR(
-        self, domain, siteidx, mps, mpo, itensor=sentinel, method="Scratch", mps_conj=None):
+        self, domain, siteidx, mps, mpo, itensor=None, method="Scratch", mps_conj=None):
         """
         get the L/R Hamiltonian matrix at a random site(siteidx): 3d tensor
         S-     -S     mpsconj
@@ -66,15 +70,18 @@ class Environ:
         if mps_conj is None:
             mps_conj = mps.conj()
 
-        if siteidx not in range(len(mps)):
-            return sentinel
+        if siteidx < 0:
+            return self.left_sentinal
+        if len(mps) <= siteidx:
+            return self.right_sentinal
 
         if method == "Scratch":
-            itensor = sentinel
             if domain == "L":
                 sitelist = range(siteidx + 1)
+                itensor = self.left_sentinal
             else:
                 sitelist = range(len(mps) - 1, siteidx - 1, -1)
+                itensor = self.right_sentinal
             for imps in sitelist:
                 itensor = contract_one_site(itensor, mps[imps], mpo[imps],
                         domain, mps_conj[imps])
