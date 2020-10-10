@@ -15,6 +15,11 @@ class UniformModel(Model):
         super().__init__(basis, ham_terms, dipole)
         if unitcell_num is None:
             self.unitcell_num = 2
+        else:
+            self.unitcell_num = unitcell_num
         assert isinstance(self.unitcell_num, int)
 
         self.unitcell_size = len(basis) // self.unitcell_num
+
+    def flip(self):
+        return self.__class__(self.basis[::-1], self.ham_terms, self.dipole, self.unitcell_num)
