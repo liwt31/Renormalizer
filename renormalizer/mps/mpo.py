@@ -629,6 +629,11 @@ class Mpo(MatrixProduct):
             terms = [terms]
 
         if len(terms) == 0:
+            self.model = model
+            for p in model.pbond_list:
+                self.append(np.eye(p).reshape(1, p, p, 1))
+            self.build_empty_qn()
+            return
             raise ValueError("Terms contain nothing.")
         terms = model.check_operator_terms(terms)
         if len(terms) == 0:
