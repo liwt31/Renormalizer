@@ -2,6 +2,7 @@
 
 import logging
 
+from renormalizer.mps.backend import np
 from renormalizer.mps import MpDm, Mpo, ThermalProp
 from renormalizer.utils import TdMpsJob, Quantity, EvolveConfig, CompressConfig, EvolveMethod
 from renormalizer.model import Model
@@ -42,9 +43,13 @@ class SpectralFunction(TdMpsJob):
             self.compress_config = CompressConfig()
         # todo: a translational invariance Model
         # electron-addition Green's function at different $t$ assuming translational invariance
-        self.G_array = []
+        self._G_array = []
         self.e_occupations_array = []
         super().__init__(evolve_config, False, dump_dir, job_name)
+
+    @property
+    def G_array(self):
+        return np.array(self._G_array)
 
     def init_mps(self):
         i_mpo = MpDm.max_entangled_gs(self.model)
@@ -73,10 +78,10 @@ class SpectralFunction(TdMpsJob):
             self.model.mpos[key] = a_opers
         else:
             a_opers = self.model.mpos[key]
-        
-        a_bra_mpo, a_ket_mpo = self.latest_mps
-        G = a_bra_mpo.expectations(a_opers, a_ket_mpo)
-        self.G_array.append(G)
+
+        a_bra_mpo, a_ket_mpo = mps
+        G = a_ket_mpo.expectations(a_opers, a_bra_mpo.conj()) / 1j
+        self._G_array.append(G)
         self.e_occupations_array.append(a_ket_mpo.e_occupations)
 
 
