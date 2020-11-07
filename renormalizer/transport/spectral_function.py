@@ -3,9 +3,10 @@
 import logging
 
 from renormalizer.mps.backend import np
-from renormalizer.mps import MpDm, Mpo, ThermalProp
+from renormalizer.mps import MpDm, Mpo, Mps, ThermalProp
 from renormalizer.utils import TdMpsJob, Quantity, EvolveConfig, CompressConfig, EvolveMethod
 from renormalizer.model import Model
+from renormalizer.model.basis import BasisSHO
 
 
 logger = logging.getLogger(__name__)
@@ -66,10 +67,10 @@ class SpectralFunction(TdMpsJob):
         if self.evolve_config.is_tdvp:
             a_ket_mpo = a_ket_mpo.expand_bond_dimension(self.h_mpo)
         a_ket_mpo.canonical_normalize()
-        a_bra_mpo = tp.latest_mps.copy()
+        bra_mpo = tp.latest_mps.copy()
         a_ket_mpo.evolve_config = self.evolve_config
-        a_bra_mpo.evolve_config = exact_evolve_config
-        return (a_bra_mpo, a_ket_mpo)
+        bra_mpo.evolve_config = exact_evolve_config
+        return (bra_mpo, a_ket_mpo)
 
     def process_mps(self, mps):
         key = "a"
@@ -98,3 +99,41 @@ class SpectralFunction(TdMpsJob):
         dump_dict["G array"] = self.G_array
         dump_dict["electron occupations array"] = self.e_occupations_array
         return dump_dict
+
+
+
+class SpectralFunctionZT(SpectralFunction):
+
+    def __init__(
+            self,
+            model: Model,
+            compress_config: CompressConfig = None,
+            evolve_config: EvolveConfig = None,
+            dump_dir: str = None,
+            job_name: str=None,
+    ):
+        self.model: Model = model
+        self.compress_config = compress_config
+        if self.compress_config is None:
+            self.compress_config = CompressConfig()
+        # electron-addition Green's function at different $t$ assuming translational invariance
+        self._G_array = []
+        self.e_occupations_array = []
+        TdMpsJob.__init__(self, evolve_config, False, dump_dir, job_name)
+
+    def init_mps(self):
+        creation_oper = Mpo.onsite(self.model, r"a^\dagger", dof_set={self.model.e_dofs[0]})
+        gs = Mps.ground_state(self.model, False)
+        self.h_mpo = Mpo(self.model, offset=Quantity(gs.expectation(Mpo(self.model))))
+        a_ket = creation_oper.apply(gs, canonicalise=True)
+        a_ket.compress_config = self.compress_config
+        a_ket.evolve_config = self.evolve_config
+        a_ket.canonical_normalize()
+        if self.evolve_config.is_tdvp:
+            a_ket = a_ket.expand_bond_dimension(self.h_mpo)
+        return (gs, a_ket)
+
+    def evolve_single_step(self, evolve_dt):
+        prev_bra_mpdm, prev_ket_mpdm = self.latest_mps
+        latest_ket_mpdm = prev_ket_mpdm.evolve(self.h_mpo, evolve_dt)
+        return (prev_bra_mpdm, latest_ket_mpdm)

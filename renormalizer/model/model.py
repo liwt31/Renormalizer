@@ -29,13 +29,19 @@ class Model:
         Contains the transition dipole matrix element. The key is the dof name.
     """
     def __init__(self, basis: List[BasisSet], ham_terms: List[Op], dipole: Dict = None):
-
+        all_dof_list = []
+        for local_basis in basis:
+                all_dof_list.extend(local_basis.dofs)
+        if len(all_dof_list) != len(set(all_dof_list)):
+            raise ValueError("Duplicate DoF definition found in the basis list.")
         self.basis: List[BasisSet] = basis
         # alias
         self.dof_to_siteidx = self.order = {}
+        self.dof_to_basis = {}
         for siteidx, ba in enumerate(basis):
             for dof_name in ba.dofs:
                 self.dof_to_siteidx[dof_name] = siteidx
+                self.dof_to_basis[dof_name] = ba
 
         self.ham_terms: List[Op] = self.check_operator_terms(ham_terms)
         # array(n_e, n_e)
