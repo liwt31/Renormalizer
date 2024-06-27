@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. MPS and MPO" href="mps_mpo.html" /><link rel="prev" title="2. Basic Tutorials" href="../tutorial.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="MPS and MPO" href="mps_mpo.html" /><link rel="prev" title="Basic Tutorials" href="../tutorial.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>2.1. Define Your Model - Renormalizer 0.1.0 documentation</title>
+        <title>Define Your Model - Renormalizer 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -155,31 +155,31 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../install.html">1. Installation guide</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../tutorial.html">2. Basic Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1. Define Your Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mps_mpo.html">2.2. MPS and MPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compress_mps.html">2.3. Compressing MPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation guide</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../tutorial.html">Basic Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Define Your Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_mpo.html">MPS and MPO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compress_mps.html">Compressing MPS</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">3. Application Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="1D-Heisenberg.html">3.1. Ground state of the Heisenberg model</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">Application Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="1D-Heisenberg.html">Ground state of the Heisenberg model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">4. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../model.html">4.1. Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../mps.html">4.2. Low Level Data Structure and Algorithms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../static.html">4.3. Static Eigenstate Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../spectrum.html">4.4. spectra: absorption/emission spectrum at zero/finite temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ct.html">4.5. Charge Transport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cv.html">4.6. Frequency domain DMRG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sbm.html">4.7. Spin-Boson Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configs.html">4.8. Calculation Configurations</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mps.html">Low Level Data Structure and Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../static.html">Static Eigenstate Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../spectrum.html">spectra: absorption/emission spectrum at zero/finite temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ct.html">Charge Transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cv.html">Frequency domain DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sbm.html">Spin-Boson Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configs.html">Calculation Configurations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">5. Frequently Asked Questions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../develop.html">6. How to develop Renormalizer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cite.html">7. How to cite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop.html">How to develop Renormalizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite</a></li>
 </ul>
 
 </div>
@@ -472,13 +472,13 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Define-Your-Model">
-<h1><span class="section-number">2.1. </span>Define Your Model<a class="headerlink" href="#Define-Your-Model" title="Permalink to this heading">#</a></h1>
+<h1>Define Your Model<a class="headerlink" href="#Define-Your-Model" title="Permalink to this heading">#</a></h1>
 <section id="Overview">
-<h2><span class="section-number">2.1.1. </span>Overview<a class="headerlink" href="#Overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#Overview" title="Permalink to this heading">#</a></h2>
 <p>In this notebook we will introduce 3 basic components for Renormalizer: <code class="docutils literal notranslate"><span class="pre">Op</span></code>, <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> and <code class="docutils literal notranslate"><span class="pre">Model</span></code>. These components are essential for MPS/MPO construction/manipulation for a given physical model.</p>
 </section>
 <section id="Op">
-<h2><span class="section-number">2.1.2. </span><code class="docutils literal notranslate"><span class="pre">Op</span></code><a class="headerlink" href="#Op" title="Permalink to this heading">#</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">Op</span></code><a class="headerlink" href="#Op" title="Permalink to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">Op</span></code> is the abbreviation for “operators”. It offers a convenient interface to represent operators of your interest. <code class="docutils literal notranslate"><span class="pre">Op</span></code> is the bridge between symbolic math equations and numerical tensors in MPS/MPO.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -493,15 +493,15 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:40,539[INFO] Use NumPy as backend
-2024-06-27 08:10:40,540[INFO] numpy random seed is 9012
-2024-06-27 08:10:40,541[INFO] random seed is 1092
-2024-06-27 08:10:40,551[INFO] Git Commit Hash: 74dbf0f7128c0d7ae5b84d482db14114e8224448
-2024-06-27 08:10:40,553[INFO] use 64 bits
+2024-06-27 08:20:57,167[INFO] Use NumPy as backend
+2024-06-27 08:20:57,168[INFO] numpy random seed is 9012
+2024-06-27 08:20:57,169[INFO] random seed is 1092
+2024-06-27 08:20:57,179[INFO] Git Commit Hash: 2411309fc2e974771bc000608628d8790dc54a36
+2024-06-27 08:20:57,180[INFO] use 64 bits
 </pre></div></div>
 </div>
 <section id="Basics">
-<h3><span class="section-number">2.1.2.1. </span>Basics<a class="headerlink" href="#Basics" title="Permalink to this heading">#</a></h3>
+<h3>Basics<a class="headerlink" href="#Basics" title="Permalink to this heading">#</a></h3>
 <p>There are 3 basic attributes for an operator:</p>
 <ul class="simple">
 <li><p>The operation or its symbol, such as <span class="math notranslate nohighlight">\(\hat X\)</span>, <span class="math notranslate nohighlight">\(\hat a^\dagger\)</span>, <span class="math notranslate nohighlight">\(\hat p^2\)</span></p></li>
@@ -604,7 +604,7 @@ Op(&#39;X X X&#39;, [0, 1, 2], 1.0)
 <p><code class="docutils literal notranslate"><span class="pre">Op</span></code> also has a lot of useful functions and attributes, please refer to the API document for more details.</p>
 </section>
 <section id="Operations-and-OpSum">
-<h3><span class="section-number">2.1.2.2. </span>Operations and <code class="docutils literal notranslate"><span class="pre">OpSum</span></code><a class="headerlink" href="#Operations-and-OpSum" title="Permalink to this heading">#</a></h3>
+<h3>Operations and <code class="docutils literal notranslate"><span class="pre">OpSum</span></code><a class="headerlink" href="#Operations-and-OpSum" title="Permalink to this heading">#</a></h3>
 <p>Common and simple operations between operators are supported</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -740,7 +740,7 @@ Op(&#39;X&#39;, [0], 5.0)
 </section>
 </section>
 <section id="BasisSet">
-<h2><span class="section-number">2.1.3. </span><code class="docutils literal notranslate"><span class="pre">BasisSet</span></code><a class="headerlink" href="#BasisSet" title="Permalink to this heading">#</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">BasisSet</span></code><a class="headerlink" href="#BasisSet" title="Permalink to this heading">#</a></h2>
 <p>An essential step for converting symbolic operators into numeric tensors is to specify a set of basis. Renormalizer includes a zoo of basis set with an emphasis for electron-phonon or vibronic models.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
@@ -847,7 +847,7 @@ BasisHalfSpin(dof: (&#39;spin&#39;, 0), nbas: 2)
 <p>The number of possible basis sets is infinite and highly customized basis set for a particular problem is rairly common. You may subclass the <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> parent class in <code class="docutils literal notranslate"><span class="pre">renormalizer.model.basis.BasisSet</span></code> to customize the basis set and the numerical behavior of the operators.</p>
 </section>
 <section id="Model">
-<h2><span class="section-number">2.1.4. </span><code class="docutils literal notranslate"><span class="pre">Model</span></code><a class="headerlink" href="#Model" title="Permalink to this heading">#</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">Model</span></code><a class="headerlink" href="#Model" title="Permalink to this heading">#</a></h2>
 <p>A <code class="docutils literal notranslate"><span class="pre">Model</span></code> is basically made up with a list of <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> and the Hamiltonian in <code class="docutils literal notranslate"><span class="pre">OpSum</span></code>/<code class="docutils literal notranslate"><span class="pre">list</span></code> form. A <code class="docutils literal notranslate"><span class="pre">Model</span></code> instance is necessary for any MPS/MPO construction.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -874,7 +874,7 @@ BasisHalfSpin(dof: (&#39;spin&#39;, 0), nbas: 2)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:40,703[DEBUG] # of operator terms: 1
+2024-06-27 08:20:57,335[DEBUG] # of operator terms: 1
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -958,7 +958,7 @@ array([[0., 1.],
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.2. </span>MPS and MPO</div>
+                <div class="title">MPS and MPO</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -969,7 +969,7 @@ array([[0., 1.],
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2. </span>Basic Tutorials</div>
+                <div class="title">Basic Tutorials</div>
                 
               </div>
             </a>
@@ -1005,15 +1005,15 @@ array([[0., 1.],
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">2.1. Define Your Model</a><ul>
-<li><a class="reference internal" href="#Overview">2.1.1. Overview</a></li>
-<li><a class="reference internal" href="#Op">2.1.2. <code class="docutils literal notranslate"><span class="pre">Op</span></code></a><ul>
-<li><a class="reference internal" href="#Basics">2.1.2.1. Basics</a></li>
-<li><a class="reference internal" href="#Operations-and-OpSum">2.1.2.2. Operations and <code class="docutils literal notranslate"><span class="pre">OpSum</span></code></a></li>
+<li><a class="reference internal" href="#">Define Your Model</a><ul>
+<li><a class="reference internal" href="#Overview">Overview</a></li>
+<li><a class="reference internal" href="#Op"><code class="docutils literal notranslate"><span class="pre">Op</span></code></a><ul>
+<li><a class="reference internal" href="#Basics">Basics</a></li>
+<li><a class="reference internal" href="#Operations-and-OpSum">Operations and <code class="docutils literal notranslate"><span class="pre">OpSum</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#BasisSet">2.1.3. <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code></a></li>
-<li><a class="reference internal" href="#Model">2.1.4. <code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li><a class="reference internal" href="#BasisSet"><code class="docutils literal notranslate"><span class="pre">BasisSet</span></code></a></li>
+<li><a class="reference internal" href="#Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3. Application Tutorials" href="../applications.html" /><link rel="prev" title="2.2. MPS and MPO" href="mps_mpo.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Application Tutorials" href="../applications.html" /><link rel="prev" title="MPS and MPO" href="mps_mpo.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>2.3. Compressing MPS - Renormalizer 0.1.0 documentation</title>
+        <title>Compressing MPS - Renormalizer 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -155,31 +155,31 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../install.html">1. Installation guide</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../tutorial.html">2. Basic Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="define_model.html">2.1. Define Your Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mps_mpo.html">2.2. MPS and MPO</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.3. Compressing MPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation guide</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../tutorial.html">Basic Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="define_model.html">Define Your Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_mpo.html">MPS and MPO</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Compressing MPS</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">3. Application Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="1D-Heisenberg.html">3.1. Ground state of the Heisenberg model</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">Application Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="1D-Heisenberg.html">Ground state of the Heisenberg model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">4. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../model.html">4.1. Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../mps.html">4.2. Low Level Data Structure and Algorithms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../static.html">4.3. Static Eigenstate Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../spectrum.html">4.4. spectra: absorption/emission spectrum at zero/finite temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ct.html">4.5. Charge Transport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cv.html">4.6. Frequency domain DMRG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sbm.html">4.7. Spin-Boson Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configs.html">4.8. Calculation Configurations</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mps.html">Low Level Data Structure and Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../static.html">Static Eigenstate Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../spectrum.html">spectra: absorption/emission spectrum at zero/finite temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ct.html">Charge Transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cv.html">Frequency domain DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sbm.html">Spin-Boson Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configs.html">Calculation Configurations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">5. Frequently Asked Questions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../develop.html">6. How to develop Renormalizer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cite.html">7. How to cite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop.html">How to develop Renormalizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite</a></li>
 </ul>
 
 </div>
@@ -472,13 +472,13 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Compressing-MPS">
-<h1><span class="section-number">2.3. </span>Compressing MPS<a class="headerlink" href="#Compressing-MPS" title="Permalink to this heading">#</a></h1>
+<h1>Compressing MPS<a class="headerlink" href="#Compressing-MPS" title="Permalink to this heading">#</a></h1>
 <section id="Overview">
-<h2><span class="section-number">2.3.1. </span>Overview<a class="headerlink" href="#Overview" title="Permalink to this heading">#</a></h2>
+<h2>Overview<a class="headerlink" href="#Overview" title="Permalink to this heading">#</a></h2>
 <p>MPS can efficiently compress the system wavefunction.</p>
 </section>
 <section id="The-model">
-<h2><span class="section-number">2.3.2. </span>The model<a class="headerlink" href="#The-model" title="Permalink to this heading">#</a></h2>
+<h2>The model<a class="headerlink" href="#The-model" title="Permalink to this heading">#</a></h2>
 <p>In this tutorial we will skip the process of building the model from scratch and use one of the pre-built models in Renormalizer that is frequently used for testing. The model we use is a Frenkel-Holstein model with 3 electronic sites and 2 vibration modes for each electronic site</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
@@ -498,11 +498,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:37,452[INFO] Use NumPy as backend
-2024-06-27 08:10:37,453[INFO] numpy random seed is 9012
-2024-06-27 08:10:37,453[INFO] random seed is 1092
-2024-06-27 08:10:37,464[INFO] Git Commit Hash: 74dbf0f7128c0d7ae5b84d482db14114e8224448
-2024-06-27 08:10:37,465[INFO] use 64 bits
+2024-06-27 08:20:54,224[INFO] Use NumPy as backend
+2024-06-27 08:20:54,225[INFO] numpy random seed is 9012
+2024-06-27 08:20:54,226[INFO] random seed is 1092
+2024-06-27 08:20:54,236[INFO] Git Commit Hash: 2411309fc2e974771bc000608628d8790dc54a36
+2024-06-27 08:20:54,237[INFO] use 64 bits
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -575,7 +575,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </section>
 <section id="id1">
-<h2><span class="section-number">2.3.3. </span>Compressing MPS<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<h2>Compressing MPS<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <p>Firstly construct a random MPS and the Hamiltonian MPO</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -617,10 +617,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:37,546[DEBUG] # of operator terms: 27
-2024-06-27 08:10:37,547[DEBUG] symbolic mpo algorithm: qr
-2024-06-27 08:10:37,549[DEBUG] Input operator terms: 27
-2024-06-27 08:10:37,557[DEBUG] After combination of the same terms: 27
+2024-06-27 08:20:54,313[DEBUG] # of operator terms: 27
+2024-06-27 08:20:54,315[DEBUG] symbolic mpo algorithm: qr
+2024-06-27 08:20:54,317[DEBUG] Input operator terms: 27
+2024-06-27 08:20:54,324[DEBUG] After combination of the same terms: 27
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -695,7 +695,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:37,625[DEBUG] size before/after compress: 47.2KiB/4.2KiB, ratio: 11.177777777777777
+2024-06-27 08:20:54,392[DEBUG] size before/after compress: 47.2KiB/4.2KiB, ratio: 11.177777777777777
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -724,7 +724,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.001946138226653953, 0.002014164788066271, 0.03377407936796855)
+(0.001946138226653953, 0.0020141647880662712, 0.03377407936796876)
 </pre></div></div>
 </div>
 <blockquote>
@@ -732,7 +732,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div></blockquote>
 </section>
 <section id="Compress-Configuration">
-<h2><span class="section-number">2.3.4. </span>Compress Configuration<a class="headerlink" href="#Compress-Configuration" title="Permalink to this heading">#</a></h2>
+<h2>Compress Configuration<a class="headerlink" href="#Compress-Configuration" title="Permalink to this heading">#</a></h2>
 <p>It is sometimes desirable to perform truncation based on the magnitude of the singular values. Also, in production level calculations, MPSs are frequently compressed according to a fixed strategy. We can set the <code class="docutils literal notranslate"><span class="pre">compress_config</span></code> attribute for MPS to control the compression behavior</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -788,7 +788,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-27 08:10:37,694[DEBUG] size before/after compress: 47.2KiB/26.5KiB, ratio: 1.7784325279905715
+2024-06-27 08:20:54,463[DEBUG] size before/after compress: 47.2KiB/26.5KiB, ratio: 1.7784325279905715
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -817,7 +817,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.001973044806232115, 0.002014164788066271, 0.02041540100283133)
+(0.001973044806232115, 0.0020141647880662712, 0.02041540100283154)
 </pre></div></div>
 </div>
 </section>
@@ -833,7 +833,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">3. </span>Application Tutorials</div>
+                <div class="title">Application Tutorials</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -844,7 +844,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2.2. </span>MPS and MPO</div>
+                <div class="title">MPS and MPO</div>
                 
               </div>
             </a>
@@ -880,11 +880,11 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">2.3. Compressing MPS</a><ul>
-<li><a class="reference internal" href="#Overview">2.3.1. Overview</a></li>
-<li><a class="reference internal" href="#The-model">2.3.2. The model</a></li>
-<li><a class="reference internal" href="#id1">2.3.3. Compressing MPS</a></li>
-<li><a class="reference internal" href="#Compress-Configuration">2.3.4. Compress Configuration</a></li>
+<li><a class="reference internal" href="#">Compressing MPS</a><ul>
+<li><a class="reference internal" href="#Overview">Overview</a></li>
+<li><a class="reference internal" href="#The-model">The model</a></li>
+<li><a class="reference internal" href="#id1">Compressing MPS</a></li>
+<li><a class="reference internal" href="#Compress-Configuration">Compress Configuration</a></li>
 </ul>
 </li>
 </ul>
