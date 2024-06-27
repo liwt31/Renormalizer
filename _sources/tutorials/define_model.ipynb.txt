@@ -20,25 +20,6 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 1,
-   "id": "f93bbb6c-6087-4fc4-ae77-61f3c98b4e22",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.015381Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.015173Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.021457Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.020934Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "# add renormalizer to path\n",
-    "import sys\n",
-    "sys.path.append(\"..\")"
-   ]
-  },
-  {
    "cell_type": "markdown",
    "id": "ce4ab8f2-26f3-48f1-a93a-6b27e1c46047",
    "metadata": {},
@@ -51,14 +32,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 1,
    "id": "4bc1aac4-9fec-48f2-a801-abd479d1adc7",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.023986Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.023615Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.673397Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.672621Z"
+     "iopub.execute_input": "2024-06-27T08:10:39.946227Z",
+     "iopub.status.busy": "2024-06-27T08:10:39.946003Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.586657Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.586035Z"
     }
    },
    "outputs": [
@@ -66,35 +47,35 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,628[INFO] Use NumPy as backend\n"
+      "2024-06-27 08:10:40,539[INFO] Use NumPy as backend\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,629[INFO] numpy random seed is 9012\n"
+      "2024-06-27 08:10:40,540[INFO] numpy random seed is 9012\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,629[INFO] random seed is 1092\n"
+      "2024-06-27 08:10:40,541[INFO] random seed is 1092\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,639[INFO] Git Commit Hash: f8fda66a146b44930935f06cae2608b9df990075\n"
+      "2024-06-27 08:10:40,551[INFO] Git Commit Hash: 74dbf0f7128c0d7ae5b84d482db14114e8224448\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,640[INFO] use 64 bits\n"
+      "2024-06-27 08:10:40,553[INFO] use 64 bits\n"
      ]
     }
    ],
@@ -122,14 +103,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 2,
    "id": "47aa28d6-2bb6-4a19-8244-d80a99fca2f9",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.676114Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.675901Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.683001Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.682343Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.589625Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.589182Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.596459Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.595813Z"
     }
    },
    "outputs": [
@@ -139,7 +120,7 @@
        "Op('X', [0], 0.5)"
       ]
      },
-     "execution_count": 3,
+     "execution_count": 2,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -159,14 +140,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 3,
    "id": "303d5892-1992-4e4f-ac56-e3257bf237b4",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.685701Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.685322Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.689525Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.688856Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.599151Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.598774Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.602973Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.602300Z"
     }
    },
    "outputs": [
@@ -176,7 +157,7 @@
        "Op('X', [('spin 0', 'cool stuff', 2077)], 1.0)"
       ]
      },
-     "execution_count": 4,
+     "execution_count": 3,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -203,14 +184,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 4,
    "id": "8fe6c36d-0179-480e-84ec-f23c32af61d6",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.692207Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.691833Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.695996Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.695342Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.605491Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.605131Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.609208Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.608669Z"
     }
    },
    "outputs": [
@@ -220,7 +201,7 @@
        "Op('a^\\\\dagger a', [0, 1], 1.0, [[1], [-1]])"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 4,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -241,14 +222,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 5,
    "id": "d900115e-4775-4b84-90fa-0b3339d90cc7",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.698580Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.698201Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.702334Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.701682Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.611709Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.611355Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.615517Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.614902Z"
     }
    },
    "outputs": [
@@ -258,13 +239,49 @@
        "Op('a^\\\\dagger a', [(0, 1), (0, 1)], 1.0, [[1], [-1]])"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 5,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
     "Op(r\"a^\\dagger a\", (0, 1))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "61715410-4731-4e7f-a6cd-73f108bb0836",
+   "metadata": {},
+   "source": [
+    "Operator symbols for different DOFs should be separated by a space"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "81054bdb-48e9-4191-8500-c645deea060a",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T08:10:40.617919Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.617608Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.621922Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.621247Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Op('X X X', [0, 1, 2], 1.0)"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Op(\"X X X\", [0, 1, 2])  # note that Op(\"XXX\", [0, 1, 2]) does not work"
    ]
   },
   {
@@ -297,10 +314,10 @@
    "id": "7e00cea9-1bfc-4c58-bcee-38b885ec7d9d",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.705108Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.704617Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.709123Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.708448Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.624599Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.624226Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.628630Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.628090Z"
     }
    },
    "outputs": [
@@ -335,10 +352,10 @@
    "id": "84b34017-8b9b-4288-8730-e1f12de2806b",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.711679Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.711293Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.715556Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.714900Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.631081Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.630726Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.634899Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.634321Z"
     }
    },
    "outputs": [
@@ -371,10 +388,10 @@
    "id": "c1cf78f8-ed8a-4bf5-a629-b786f43210b2",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.718205Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.717845Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.722240Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.721599Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.637226Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.637030Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.641395Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.640876Z"
     }
    },
    "outputs": [
@@ -398,13 +415,41 @@
   {
    "cell_type": "code",
    "execution_count": 10,
+   "id": "04747001-e2fb-442a-a32c-267b8e531aa4",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T08:10:40.643865Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.643497Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.647506Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.646843Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Op('X', [0], 5.0)"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "10 * op1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
    "id": "26cf73a7-ef15-41ab-9f1e-96ce3d9612d8",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.724853Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.724371Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.728916Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.728234Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.650070Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.649634Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.653965Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.653289Z"
     }
    },
    "outputs": [
@@ -417,7 +462,7 @@
        " Op('Z Z', [1, 1], 0.25)]"
       ]
      },
-     "execution_count": 10,
+     "execution_count": 11,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -428,14 +473,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 12,
    "id": "fa103eaa-78ba-482d-a796-808fe67c5cc0",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.731247Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.731008Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.735353Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.734699Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.656411Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.656027Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.660141Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.659573Z"
     }
    },
    "outputs": [
@@ -445,7 +490,7 @@
        "[Op('X', [0], 0.5), Op('Z', [1], 0.5), Op('Z', [1], -0.5)]"
       ]
      },
-     "execution_count": 11,
+     "execution_count": 12,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -458,14 +503,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 13,
    "id": "cb924ed7-6a00-4cb5-8339-a5d468e72d06",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.737816Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.737451Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.741614Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.741023Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.662604Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.662221Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.666560Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.665901Z"
     }
    },
    "outputs": [
@@ -475,7 +520,7 @@
        "[Op('X', [0], 0.5)]"
       ]
      },
-     "execution_count": 12,
+     "execution_count": 13,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -505,14 +550,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
+   "execution_count": 14,
    "id": "24f5feb6-94ec-4f8f-a655-c23782ad3457",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.744209Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.743845Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.748174Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.747627Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.669209Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.668839Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.673179Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.672540Z"
     }
    },
    "outputs": [
@@ -529,7 +574,7 @@
        " 'BasisSineDVR']"
       ]
      },
-     "execution_count": 13,
+     "execution_count": 14,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -549,14 +594,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 14,
+   "execution_count": 15,
    "id": "66b6d810-e472-426a-a222-b47de5df86d7",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.750919Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.750388Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.754767Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.754179Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.675693Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.675307Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.679725Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.679153Z"
     }
    },
    "outputs": [
@@ -566,7 +611,7 @@
        "BasisHalfSpin(dof: ('spin', 0), nbas: 2)"
       ]
      },
-     "execution_count": 14,
+     "execution_count": 15,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -587,14 +632,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 16,
    "id": "04cbaf61-3d57-4ebb-b270-0882a7675e60",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.757324Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.757133Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.761770Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.761115Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.682230Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.681869Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.686686Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.686100Z"
     }
    },
    "outputs": [
@@ -607,7 +652,7 @@
        "        [0.+1.j, 0.+0.j]]))"
       ]
      },
-     "execution_count": 15,
+     "execution_count": 16,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -626,14 +671,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 16,
+   "execution_count": 17,
    "id": "f563057c-1ffd-4312-b207-0629e57b5fc8",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.764318Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.763928Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.769264Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.768600Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.689162Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.688816Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.694389Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.693546Z"
     }
    },
    "outputs": [
@@ -650,7 +695,7 @@
        "        [0.        , 0.        , 0.17320508, 0.        ]]))"
       ]
      },
-     "execution_count": 16,
+     "execution_count": 17,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -682,7 +727,7 @@
    "id": "950dc6cf-b139-424e-b055-9881d4daf858",
    "metadata": {},
    "source": [
-    "The number of possible basis sets is infinite and highly customized basis set for a particular problem is fairly common.\n",
+    "The number of possible basis sets is infinite and highly customized basis set for a particular problem is rairly common.\n",
     "You may subclass the `BasisSet` parent class in `renormalizer.model.basis.BasisSet` to customize the basis set and the numerical behavior of the operators."
    ]
   },
@@ -699,14 +744,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 17,
+   "execution_count": 18,
    "id": "e67e21ac-a3c5-4b56-abd6-c4a40960e503",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.772015Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.771625Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.774865Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.774305Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.697377Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.696998Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.700243Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.699574Z"
     }
    },
    "outputs": [],
@@ -725,14 +770,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": 19,
    "id": "0b0d473e-00e2-4f1b-901e-afa39e2a46bc",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.777365Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.776984Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.782335Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.781795Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.702712Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.702366Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.707885Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.707215Z"
     }
    },
    "outputs": [
@@ -740,7 +785,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2024-06-27 07:34:08,778[DEBUG] # of operator terms: 1\n"
+      "2024-06-27 08:10:40,703[DEBUG] # of operator terms: 1\n"
      ]
     },
     {
@@ -749,7 +794,7 @@
        "<class 'renormalizer.mps.mpo.Mpo'> with 1 sites"
       ]
      },
-     "execution_count": 18,
+     "execution_count": 19,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -762,14 +807,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": 20,
    "id": "390b4aa0-91fe-472b-b9fb-21571659da66",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.784799Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.784392Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.788834Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.788203Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.710597Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.710234Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.714491Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.713798Z"
     }
    },
    "outputs": [
@@ -780,7 +825,7 @@
        "       [1., 0.]])"
       ]
      },
-     "execution_count": 19,
+     "execution_count": 20,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -807,7 +852,7 @@
     "- Numerical compression is not involved and the construction is **exact**.\n",
     "- The construction time cost is neglegible for most models\n",
     "\n",
-    "Additionally, we also guarantee that the constructed MPO is **optimal** in terms of bond dimension.\n",
+    "Additionally, we also guarantee that the constructed MPO is **optimal** in terms of bond dimension. \n",
     "\n",
     "For details of our algorithm, see [A general automatic method for optimal construction of matrix product operators using bipartite graph theory](https://aip.scitation.org/doi/10.1063/5.0018149)."
    ]
@@ -822,14 +867,14 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": 21,
    "id": "cf659b50-c31c-4fe3-a4bf-ee671a901d5c",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2024-06-27T07:34:08.791395Z",
-     "iopub.status.busy": "2024-06-27T07:34:08.791012Z",
-     "iopub.status.idle": "2024-06-27T07:34:08.795472Z",
-     "shell.execute_reply": "2024-06-27T07:34:08.794880Z"
+     "iopub.execute_input": "2024-06-27T08:10:40.717169Z",
+     "iopub.status.busy": "2024-06-27T08:10:40.716755Z",
+     "iopub.status.idle": "2024-06-27T08:10:40.721055Z",
+     "shell.execute_reply": "2024-06-27T08:10:40.720399Z"
     }
    },
    "outputs": [
@@ -839,7 +884,7 @@
        "['HolsteinModel', 'Model', 'SpinBosonModel', 'TI1DModel']"
       ]
      },
-     "execution_count": 20,
+     "execution_count": 21,
      "metadata": {},
      "output_type": "execute_result"
     }

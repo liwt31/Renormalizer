@@ -2,9 +2,12 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="#" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="4.1. Model" href="model.html" /><link rel="prev" title="3.1. Ground state of the Heisenberg model" href="tutorials/1D-Heisenberg.html" />
 
-    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/><title>Search - Renormalizer 0.1.0 documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>4. API Reference - Renormalizer 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -145,13 +148,13 @@
   
   <span class="sidebar-brand-text">Renormalizer 0.1.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="#" role="search">
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorial.html">2. Basic Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/define_model.html">2.1. Define Your Model</a></li>
@@ -163,7 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/1D-Heisenberg.html">3.1. Ground state of the Heisenberg model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">4. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">4. API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="model.html">4.1. Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps.html">4.2. Low Level Data Structure and Algorithms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="static.html">4.3. Static Eigenstate Method</a></li>
@@ -196,7 +199,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -210,25 +214,87 @@
           </label>
         </div>
         <article role="main">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
+          <section id="api-reference">
+<h1><span class="section-number">4. </span>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model.html">4.1. Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#the-model-classes">4.1.1. The Model classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#basis-functions">4.1.2. Basis Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#the-operator-class">4.1.3. The Operator Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mps.html">4.2. Low Level Data Structure and Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mps.html#matrix-product-mp">4.2.1. Matrix Product (MP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps.html#matrix-product-state-mps">4.2.2. Matrix Product State (MPS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps.html#matrix-product-operator-mpo">4.2.3. Matrix Product Operator (MPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps.html#matrix-product-density-matrix-mpdm">4.2.4. Matrix Product Density Matrix (MPDM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps.html#module-renormalizer.mps.thermalprop">4.2.5. Thermal Propagation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="static.html">4.3. Static Eigenstate Method</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="static.html#module-renormalizer.mps.gs">4.3.1. Ground state and state-averaged method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static.html#tamm-dancoff-approximation-for-excited-state">4.3.2. Tamm-Dancoff approximation for excited state</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spectrum.html">4.4. spectra: absorption/emission spectrum at zero/finite temperature</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spectrum.html#module-renormalizer.spectra.zerot">4.4.1. Zero temperature — TD-DMRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ct.html">4.5. Charge Transport</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ct.html#module-renormalizer.transport.kubo">4.5.1. Obtain Mobility by Green-Kubo Formula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ct.html#module-renormalizer.transport.dynamics">4.5.2. Charge Diffusion Dynamics Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ct.html#module-renormalizer.transport.spectral_function">4.5.3. One-Particle Spectral Function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cv.html">4.6. Frequency domain DMRG</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cv.html#cv-correction-vector">4.6.1. cv — correction vector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sbm.html">4.7. Spin-Boson Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sbm.html#renormalizer.sbm.sbm.SpinBosonDynamics"><code class="docutils literal notranslate"><span class="pre">SpinBosonDynamics</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">4.8. Calculation Configurations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.BondDimDistri"><code class="docutils literal notranslate"><span class="pre">BondDimDistri</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.CompressConfig"><code class="docutils literal notranslate"><span class="pre">CompressConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.CompressCriteria"><code class="docutils literal notranslate"><span class="pre">CompressCriteria</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.EvolveConfig"><code class="docutils literal notranslate"><span class="pre">EvolveConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.EvolveMethod"><code class="docutils literal notranslate"><span class="pre">EvolveMethod</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.OFS"><code class="docutils literal notranslate"><span class="pre">OFS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.OptimizeConfig"><code class="docutils literal notranslate"><span class="pre">OptimizeConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#renormalizer.utils.configs.parse_memory_limit"><code class="docutils literal notranslate"><span class="pre">parse_memory_limit()</span></code></a></li>
+</ul>
+</li>
+</ul>
 </div>
-</noscript>
-
-<div id="search-results"></div>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="model.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">4.1. </span>Model</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="tutorials/1D-Heisenberg.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">3.1. </span>Ground state of the Heisenberg model</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -263,8 +329,5 @@
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>
