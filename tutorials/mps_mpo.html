@@ -183,6 +183,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../ct.html">Charge Transport</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cv.html">Frequency domain DMRG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sbm.html">Spin-Boson Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ttn.html">Tree Tensor Network Algorithms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configs.html">Calculation Configurations</a></li>
 </ul>
 </li>
@@ -513,11 +514,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-28 01:25:32,942[INFO] Use NumPy as backend
-2024-06-28 01:25:32,943[INFO] numpy random seed is 9012
-2024-06-28 01:25:32,944[INFO] random seed is 1092
-2024-06-28 01:25:32,955[INFO] Git Commit Hash: 94747e013f46048a35de60da868456c9caa301ef
-2024-06-28 01:25:32,956[INFO] use 64 bits
+2024-07-02 03:25:53,110[INFO] Use NumPy as backend
+2024-07-02 03:25:53,111[INFO] numpy random seed is 9012
+2024-07-02 03:25:53,112[INFO] random seed is 1092
+2024-07-02 03:25:53,122[INFO] Git Commit Hash: 5b161685e258edae61cf283eb7f772b2812e519c
+2024-07-02 03:25:53,123[INFO] use 64 bits
 </pre></div></div>
 </div>
 <p>First, construct all terms in the Hamiltonian in a <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">OpSum</span></code>.</p>
@@ -670,8 +671,8 @@ array([[0., 0., 0., 0., 0., 0., 0., 0.],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7f4d93bd6880 (1, 2, 2) float64&gt;,
- &lt;Matrix at 0x7f4d93bd64c0 (2, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7fe55bbd5880 (1, 2, 2) float64&gt;,
+ &lt;Matrix at 0x7fe55bbd53d0 (2, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Matrix</span></code> can be considered as a wrapper for <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> with more metadata. The indices of the array are left virtual index, the physical index and the right virtual index. The underlaying matrix can be accessed via the <code class="docutils literal notranslate"><span class="pre">array</span></code> attribute.</p>
@@ -889,10 +890,10 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-28 01:25:33,102[DEBUG] # of operator terms: 3
-2024-06-28 01:25:33,103[DEBUG] symbolic mpo algorithm: qr
-2024-06-28 01:25:33,104[DEBUG] Input operator terms: 3
-2024-06-28 01:25:33,106[DEBUG] After combination of the same terms: 3
+2024-07-02 03:25:53,268[DEBUG] # of operator terms: 3
+2024-07-02 03:25:53,269[DEBUG] symbolic mpo algorithm: qr
+2024-07-02 03:25:53,269[DEBUG] Input operator terms: 3
+2024-07-02 03:25:53,272[DEBUG] After combination of the same terms: 3
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -901,8 +902,8 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7f4dc08fcf40 (1, 2, 2, 3) float64&gt;,
- &lt;Matrix at 0x7f4dc0903280 (3, 8, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7fe5889b78e0 (1, 2, 2, 3) float64&gt;,
+ &lt;Matrix at 0x7fe5889b79d0 (3, 8, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p>Here the logging outputs that there are 3 terms in the Hamiltonian, since <span class="math notranslate nohighlight">\(\hat \sigma_z\)</span> with coefficient 0 is dropped automatically.</p>
@@ -957,7 +958,7 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-06-28 01:25:33,127[DEBUG] # of operator terms: 1
+2024-07-02 03:25:53,293[DEBUG] # of operator terms: 1
 </pre></div></div>
 </div>
 </section>
