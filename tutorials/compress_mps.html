@@ -5,14 +5,14 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VMR8V3W3BR"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HTENNM8CV"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-VMR8V3W3BR');
+        gtag('config', 'G-3HTENNM8CV');
     </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Application Tutorials" href="../applications.html" /><link rel="prev" title="MPS and MPO" href="mps_mpo.html" />
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Quantum Numbers" href="quantum_number.html" /><link rel="prev" title="MPS and MPO" href="mps_mpo.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>Compressing MPS - Renormalizer 0.1.0 documentation</title>
@@ -169,6 +169,8 @@
 <li class="toctree-l2"><a class="reference internal" href="define_model.html">Define Your Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_mpo.html">MPS and MPO</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Compressing MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantum_number.html">Quantum Numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ttn_basic.html">Basics of Tree Tensor Networks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">Application Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -485,14 +487,14 @@ div.rendered_html tbody tr:hover {
 <h1>Compressing MPS<a class="headerlink" href="#Compressing-MPS" title="Permalink to this heading">#</a></h1>
 <section id="Overview">
 <h2>Overview<a class="headerlink" href="#Overview" title="Permalink to this heading">#</a></h2>
-<p>MPS can efficiently compress the system wavefunction.</p>
+<p>In this notebook we will show how to compress the wavefuntion stored in an MPS via singular value decomposition (SVD).</p>
 </section>
 <section id="The-model">
 <h2>The model<a class="headerlink" href="#The-model" title="Permalink to this heading">#</a></h2>
 <p>In this tutorial we will skip the process of building the model from scratch and use one of the pre-built models in Renormalizer that is frequently used for testing. The model we use is a Frenkel-Holstein model with 3 electronic sites and 2 vibration modes for each electronic site</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\hat H = \sum_{i=1}^3\sum_{j=1}^3 J_{ij} \hat a^\dagger_i a_{i+1} + \sum_{i=1}^3\sum_{k=1,2}\frac{1}{2}  (\hat p_{ik}^2 + \omega_k^2 \hat x_{ik}^2) + \sum_{i=1}^3\sum_{k=1,2} \hat a^\dagger_i \hat a_i \hat x_{ik}\]</div>
+\[\hat H = \sum_{i=1}^3\sum_{j=1}^3 J_{ij} \hat a^\dagger_i \hat a_{i+1} + \sum_{i=1}^3\sum_{k=1,2}\frac{1}{2}  (\hat p_{ik}^2 + \omega_k^2 \hat x_{ik}^2) + \sum_{i=1}^3\sum_{k=1,2} \hat a^\dagger_i \hat a_i \hat x_{ik}\]</div>
 </div>
 <p>Therefore, the model has 9 sites in total. 3 of them are electronic sites and the rest are vibrational sites.</p>
 <div class="nbinput docutils container">
@@ -508,11 +510,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-07-02 03:25:47,092[INFO] Use NumPy as backend
-2024-07-02 03:25:47,093[INFO] numpy random seed is 9012
-2024-07-02 03:25:47,094[INFO] random seed is 1092
-2024-07-02 03:25:47,104[INFO] Git Commit Hash: 5b161685e258edae61cf283eb7f772b2812e519c
-2024-07-02 03:25:47,105[INFO] use 64 bits
+2024-07-26 03:25:52,269[INFO] Use NumPy as backend
+2024-07-26 03:25:52,270[INFO] numpy random seed is 9012
+2024-07-26 03:25:52,271[INFO] random seed is 1092
+2024-07-26 03:25:52,282[INFO] Git Commit Hash: 49a95b7b233b065dac03a2c29d0169c0bc967cfd
+2024-07-26 03:25:52,283[INFO] use 64 bits
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -627,10 +629,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-07-02 03:25:47,181[DEBUG] # of operator terms: 27
-2024-07-02 03:25:47,182[DEBUG] symbolic mpo algorithm: qr
-2024-07-02 03:25:47,183[DEBUG] Input operator terms: 27
-2024-07-02 03:25:47,189[DEBUG] After combination of the same terms: 27
+2024-07-26 03:25:52,366[DEBUG] # of operator terms: 27
+2024-07-26 03:25:52,368[DEBUG] symbolic mpo algorithm: qr
+2024-07-26 03:25:52,370[DEBUG] Input operator terms: 27
+2024-07-26 03:25:52,378[DEBUG] After combination of the same terms: 27
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -705,7 +707,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-07-02 03:25:47,255[DEBUG] size before/after compress: 47.2KiB/4.2KiB, ratio: 11.177777777777777
+2024-07-26 03:25:52,449[DEBUG] size before/after compress: 47.2KiB/4.2KiB, ratio: 11.177777777777777
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -734,7 +736,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.001946138226653953, 0.002014164788066271, 0.03377407936796855)
+(0.0031058187888397598, 0.003148758678336175, 0.013637084922336801)
 </pre></div></div>
 </div>
 <blockquote>
@@ -798,7 +800,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-07-02 03:25:47,330[DEBUG] size before/after compress: 47.2KiB/26.5KiB, ratio: 1.7784325279905715
+2024-07-26 03:25:52,519[DEBUG] size before/after compress: 47.2KiB/26.5KiB, ratio: 1.7784325279905715
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -827,7 +829,7 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(0.001973044806232115, 0.002014164788066271, 0.02041540100283133)
+(0.0031487586783361704, 0.003148758678336175, 1.5150381614690706e-15)
 </pre></div></div>
 </div>
 </section>
@@ -838,12 +840,12 @@ array([ 1,  8, 25, 20, 25, 25, 20, 15, 15,  1])
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../applications.html">
+          <a class="next-page" href="quantum_number.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Application Tutorials</div>
+                <div class="title">Quantum Numbers</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
