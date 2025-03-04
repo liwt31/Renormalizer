@@ -502,15 +502,15 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">factorial</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">factorial</span>
 
-<span class="kn">from</span> <span class="nn">renormalizer</span> <span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Mpo</span><span class="p">,</span> <span class="n">BasisSHO</span><span class="p">,</span> <span class="n">BasisSimpleElectron</span>
-<span class="kn">from</span> <span class="nn">renormalizer.utils.log</span> <span class="kn">import</span> <span class="n">set_stream_level</span><span class="p">,</span> <span class="n">INFO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">renormalizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Op</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Mpo</span><span class="p">,</span> <span class="n">BasisSHO</span><span class="p">,</span> <span class="n">BasisSimpleElectron</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">renormalizer.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_stream_level</span><span class="p">,</span> <span class="n">INFO</span>
 <span class="n">set_stream_level</span><span class="p">(</span><span class="n">INFO</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">eval_hermite</span> <span class="k">as</span> <span class="n">hermite</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">eval_hermite</span> <span class="k">as</span> <span class="n">hermite</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;mm.mplstyle&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -520,11 +520,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2024-12-04 10:15:55,631[INFO] Use NumPy as backend
-2024-12-04 10:15:55,632[INFO] numpy random seed is 9012
-2024-12-04 10:15:55,633[INFO] random seed is 1092
-2024-12-04 10:15:55,643[INFO] Git Commit Hash: cc8f9bdc809da20eafd9d5b8f2bef4cf6882956c
-2024-12-04 10:15:55,644[INFO] use 64 bits
+2025-03-04 06:24:11,783[INFO] Use NumPy as backend
+2025-03-04 06:24:11,784[INFO] numpy random seed is 9012
+2025-03-04 06:24:11,784[INFO] random seed is 1092
+2025-03-04 06:24:11,793[INFO] Git Commit Hash: 785189bf8584e6800eba66b19928d4e341058151
+2025-03-04 06:24:11,794[INFO] use 64 bits
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -539,7 +539,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate and store the lowest 16 wavefuntions for the following calculation</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate and store the lowest 16 wavefuntions for the following visualization</span>
 <span class="n">limit</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">limit</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <span class="n">psi_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -608,7 +608,7 @@ div.rendered_html tbody tr:hover {
 \[H =\omega b^\dagger b + g\omega(b^\dagger + b) + E_{\textrm{shift}}\]</div>
 </div>
 <p>where <span class="math notranslate nohighlight">\(g=-\sqrt{\frac{m\omega}{2}} x_{\textrm{eq}}\)</span> and <span class="math notranslate nohighlight">\(E_{\textrm{shift}}=\frac{1}{2}m\omega^2x_{\textrm{eq}}^2+\frac{1}{2}\omega\)</span> are constants.</p>
-<p>We label the DOF of this nuclear coordiate as <code class="docutils literal notranslate"><span class="pre">0</span></code>, and construct the Hamiltonian using the <code class="docutils literal notranslate"><span class="pre">Op</span></code> class. The Hamiltonian matrix is calculated by construct an MPO with only 1 site.</p>
+<p>We label the DOF of this nuclear coordiate as <code class="docutils literal notranslate"><span class="pre">0</span></code>, and construct the Hamiltonian using the <code class="docutils literal notranslate"><span class="pre">Op</span></code> class. The Hamiltonian matrix is calculated by constructing an MPO with only 1 site.</p>
 <p>We perform the calculation at several different values of <span class="math notranslate nohighlight">\(x_{\textrm{eq}}\)</span> and the number of basis in the basis set.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
