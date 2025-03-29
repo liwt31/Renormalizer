@@ -517,11 +517,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-03-17 10:59:25,096[INFO] Use NumPy as backend
-2025-03-17 10:59:25,097[INFO] numpy random seed is 9012
-2025-03-17 10:59:25,098[INFO] random seed is 1092
-2025-03-17 10:59:25,108[INFO] Git Commit Hash: e1fc4d6081b33f493768c0bd46c8fb145ed737c0
-2025-03-17 10:59:25,109[INFO] use 64 bits
+2025-03-29 11:17:05,577[INFO] Use NumPy as backend
+2025-03-29 11:17:05,578[INFO] numpy random seed is 9012
+2025-03-29 11:17:05,578[INFO] random seed is 1092
+2025-03-29 11:17:05,587[INFO] Git Commit Hash: 73ee9ed4e86cb784bacea31d73168511dd5658bc
+2025-03-29 11:17:05,588[INFO] use 64 bits
 </pre></div></div>
 </div>
 <p>First, construct all terms in the Hamiltonian in a <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">OpSum</span></code>.</p>
@@ -674,8 +674,8 @@ array([[0., 0., 0., 0., 0., 0., 0., 0.],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7ff3d3cae310 (1, 2, 2) float64&gt;,
- &lt;Matrix at 0x7ff3d3cae2b0 (2, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7f21c13af190 (1, 2, 2) float64&gt;,
+ &lt;Matrix at 0x7f21c13af8b0 (2, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Matrix</span></code> can be considered as a wrapper for <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> with more metadata. The indices of the array are left virtual index, the physical index and the right virtual index. The underlaying matrix can be accessed via the <code class="docutils literal notranslate"><span class="pre">array</span></code> attribute.</p>
@@ -693,25 +693,25 @@ array([[0., 0., 0., 0., 0., 0., 0., 0.],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([[[-0.99496648, -0.10020826],
-         [-0.10020826,  0.99496648]]]),
- array([[[-0.43283409],
-         [-0.01476036],
-         [-0.21888015],
-         [-0.16222924],
-         [-0.19864132],
-         [ 0.36843999],
-         [-0.2858778 ],
-         [ 0.31116499]],
+(array([[[-0.3001646 ,  0.95388742],
+         [-0.95388742, -0.3001646 ]]]),
+ array([[[-0.23065497],
+         [-0.17095648],
+         [-0.20932737],
+         [ 0.38826049],
+         [-0.3012568 ],
+         [ 0.32790434],
+         [ 0.18585373],
+         [ 0.23358931]],
 
-        [[ 0.17636599],
-         [ 0.2216647 ],
-         [ 0.45632911],
-         [ 0.22315835],
-         [-0.04071718],
-         [-0.02460395],
-         [ 0.19383492],
-         [-0.07963948]]]))
+        [[ 0.48087768],
+         [ 0.23516332],
+         [-0.04290759],
+         [-0.02592754],
+         [ 0.20426241],
+         [-0.08392375],
+         [-0.03647715],
+         [ 0.31059649]]]))
 </pre></div></div>
 </div>
 <p>Conceptually, <code class="docutils literal notranslate"><span class="pre">Mps</span></code> can be considered as a sparse representation for a wavefunction/vector</p>
@@ -729,10 +729,10 @@ array([[0., 0., 0., 0., 0., 0., 0., 0.],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
-       -0.36411992,  0.26501497, -0.3016182 ,  0.2188518 ,  0.22202805,
-        0.47596577,  0.23829179, -0.02060673, -0.06140084,  0.22150656,
-       -0.11041992])
+array([ 0.52793762,  0.27563442,  0.02190365, -0.14127401,  0.28526997,
+       -0.17847908, -0.09058181,  0.22615884,  0.07567642,  0.09248553,
+        0.21255409, -0.36257427,  0.22605273, -0.28759289, -0.16633439,
+       -0.31604798])
 </pre></div></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Mps</span></code> has a lot of utilities to calculate the properties of the wavefunction. For more of them, please refer to the API reference.</p>
@@ -767,24 +767,24 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{0: array([[0.55402862, 0.31394311],
-        [0.31394311, 0.44597138]]),
- 1: array([[ 0.21845031,  0.0454829 ,  0.17521973,  0.10957589,  0.07879761,
-         -0.16381269,  0.15792354, -0.14872851],
-        [ 0.0454829 ,  0.04935311,  0.1043828 ,  0.05186089, -0.00609355,
-         -0.01089213,  0.04718602, -0.02224617],
-        [ 0.17521973,  0.1043828 ,  0.25614478,  0.13734241,  0.02489821,
-         -0.0918717 ,  0.15102549, -0.10444965],
-        [ 0.10957589,  0.05186089,  0.13734241,  0.07611798,  0.02313905,
-         -0.06526232,  0.08963362, -0.06825227],
-        [ 0.07879761, -0.00609355,  0.02489821,  0.02313905,  0.04111626,
-         -0.0721856 ,  0.04889473, -0.05856753],
-        [-0.16381269, -0.01089213, -0.0918717 , -0.06526232, -0.0721856 ,
-          0.13635338, -0.11009792,  0.11660507],
-        [ 0.15792354,  0.04718602,  0.15102549,  0.08963362,  0.04889473,
-         -0.11009792,  0.11929809, -0.10439207],
-        [-0.14872851, -0.02224617, -0.10444965, -0.06825227, -0.05856753,
-          0.11660507, -0.10439207,  0.1031661 ]])}
+{0: array([[0.5477172 , 0.18072785],
+        [0.18072785, 0.4522828 ]]),
+ 1: array([[ 0.28444506,  0.15251675,  0.0276491 , -0.10202219,  0.16771161,
+         -0.11598982, -0.06040914,  0.09548038],
+        [ 0.15251675,  0.08452791,  0.02569558, -0.07247285,  0.09953683,
+         -0.07579316, -0.04035099,  0.03310729],
+        [ 0.0276491 ,  0.02569558,  0.04565901, -0.08016106,  0.05429689,
+         -0.06503839, -0.03733913, -0.06222358],
+        [-0.10202219, -0.07247285, -0.08016106,  0.15141845, -0.12226214,
+          0.12948824,  0.07310542,  0.0826405 ],
+        [ 0.16771161,  0.09953683,  0.05429689, -0.12226214,  0.13247879,
+         -0.11592588, -0.06344061, -0.00692718],
+        [-0.11598982, -0.07579316, -0.06503839,  0.12948824, -0.11592588,
+          0.11456445,  0.06400354,  0.05052853],
+        [-0.06040914, -0.04035099, -0.03733913,  0.07310542, -0.06344061,
+          0.06400354,  0.03587219,  0.03208377],
+        [ 0.09548038,  0.03310729, -0.06222358,  0.0826405 , -0.00692718,
+          0.05052853,  0.03208377,  0.15103415]])}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -893,10 +893,10 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-03-17 10:59:25,251[DEBUG] # of operator terms: 3
-2025-03-17 10:59:25,252[DEBUG] Input operator terms: 3
-2025-03-17 10:59:25,254[DEBUG] After combination of the same terms: 3
-2025-03-17 10:59:25,255[DEBUG] symbolic mpo algorithm: qr
+2025-03-29 11:17:05,730[DEBUG] # of operator terms: 3
+2025-03-29 11:17:05,731[DEBUG] Input operator terms: 3
+2025-03-29 11:17:05,732[DEBUG] After combination of the same terms: 3
+2025-03-29 11:17:05,733[DEBUG] symbolic mpo algorithm: qr
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -905,8 +905,8 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7ff3d3c9ba60 (1, 2, 2, 3) float64&gt;,
- &lt;Matrix at 0x7ff3d3c9bdc0 (3, 8, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7f21a1677190 (1, 2, 2, 3) float64&gt;,
+ &lt;Matrix at 0x7f21a1677160 (3, 8, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p>Here the logging outputs that there are 3 terms in the Hamiltonian, since <span class="math notranslate nohighlight">\(\hat \sigma_z\)</span> with coefficient 0 is dropped automatically.</p>
@@ -961,9 +961,9 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-03-17 10:59:25,275[DEBUG] # of operator terms: 1
-2025-03-17 10:59:25,276[DEBUG] Input operator terms: 1
-2025-03-17 10:59:25,277[DEBUG] After combination of the same terms: 1
+2025-03-29 11:17:05,754[DEBUG] # of operator terms: 1
+2025-03-29 11:17:05,754[DEBUG] Input operator terms: 1
+2025-03-29 11:17:05,755[DEBUG] After combination of the same terms: 1
 </pre></div></div>
 </div>
 </section>
@@ -1038,7 +1038,7 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-2.89309731239322
+3.4581250957501104
 </pre></div></div>
 </div>
 <p>Calculating transition amplitudes <span class="math notranslate nohighlight">\(\langle \rm{MPS2}|\rm{MPO}|MPS\rangle\)</span> is also straight-forward</p>
@@ -1056,7 +1056,7 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.3656142066119614
+0.4915724950374597
 </pre></div></div>
 </div>
 </section>
