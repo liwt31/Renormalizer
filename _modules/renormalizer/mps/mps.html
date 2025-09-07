@@ -427,11 +427,12 @@
 <span class="sd">                Note:</span>
 <span class="sd">                    If there are bases that contain multiple dofs in the model, the value of the dict</span>
 <span class="sd">                    is the state of all dofs of the basis. For example,</span>
-<span class="sd">                    if a basis contains ``&quot;e_1&quot;``, ``&quot;e_2&quot;`` and ``&quot;e_3&quot;``,</span>
+<span class="sd">                    if a basis contains ``&quot;e_1&quot;``, ``&quot;e_2&quot;`` and ``&quot;e_3&quot;``, such as in :class:`renormalizer.BasisMultiElectron`,</span>
 <span class="sd">                    ``{&quot;e_1&quot;: 2}`` (``{&quot;e_1&quot;: [0, 0, 1]}``) means ``&quot;e_3&quot;`` is occupied and</span>
 <span class="sd">                    ``{&quot;e_1&quot;: 1}`` (``{&quot;e_1&quot;: [0, 1, 0]}``) means ``&quot;e_2&quot;`` is occupied.</span>
 <span class="sd">                    Be aware that in :class:`renormalizer.BasisMultiElectronVac` the vacuum state</span>
 <span class="sd">                    is added to the ``0`` index.</span>
+
 <span class="sd">            qn_idx (int): the site index of the quantum number center.</span>
 
 <span class="sd">        Returns:</span>

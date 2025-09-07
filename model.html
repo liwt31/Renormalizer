@@ -894,7 +894,8 @@ For basis containing only one DoF, the type could be anything that can be hashed
 For basis containing multiple DoFs, the type should be a <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple</span></code>
 of anything that can be hashed.</p></li>
 <li><p><strong>nbas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – number of dimension of the basis set</p></li>
-<li><p><strong>sigmaqn</strong> (<em>List</em>) – the quantum number of each basis. Could be an integer or tuple of integers</p></li>
+<li><p><strong>sigmaqn</strong> (<em>List</em>) – the quantum number of each basis. The length of the list should be the same as <code class="docutils literal notranslate"><span class="pre">nbas</span></code>.
+Each element of the list should be an integer or a tuple of integers</p></li>
 </ul>
 </dd>
 </dl>
@@ -1200,6 +1201,7 @@ x dx, x^2 p^2, x^2 dx, x p^2, x^3 p^2\]</div>
 </div>
 </dd>
 </dl>
+<p>Useful attributes include <code class="docutils literal notranslate"><span class="pre">self.L</span></code> (the box length), <code class="docutils literal notranslate"><span class="pre">self.dvr_x</span></code> (the grid points).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
