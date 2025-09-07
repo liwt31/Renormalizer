@@ -518,11 +518,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-09-07 11:04:29,534[INFO] Use NumPy as backend
-2025-09-07 11:04:29,535[INFO] numpy random seed is 9012
-2025-09-07 11:04:29,535[INFO] random seed is 1092
-2025-09-07 11:04:29,546[INFO] Git Commit Hash: ac6a7956a261e6a9021d782f5f0e8c2dad9031be
-2025-09-07 11:04:29,547[INFO] use 64 bits
+2025-09-07 11:20:36,883[INFO] Use NumPy as backend
+2025-09-07 11:20:36,884[INFO] numpy random seed is 9012
+2025-09-07 11:20:36,885[INFO] random seed is 1092
+2025-09-07 11:20:36,894[INFO] Git Commit Hash: ace7d4eb98b4688fd4b29507a2e76d8d70f0988e
+2025-09-07 11:20:36,895[INFO] use 64 bits
 </pre></div></div>
 </div>
 <p>First, construct all terms in the Hamiltonian in a <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">OpSum</span></code>.</p>
@@ -675,8 +675,8 @@ array([[0., 0., 0., 0., 0., 0., 0., 0.],
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7f43c8fac580 (1, 2, 2) float64&gt;,
- &lt;Matrix at 0x7f43c8facb50 (2, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7f6741e53d30 (1, 2, 2) float64&gt;,
+ &lt;Matrix at 0x7f676c9f75e0 (2, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Matrix</span></code> can be considered as a wrapper for <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> with more metadata. The indices of the array are left virtual index, the physical index and the right virtual index. The underlaying matrix can be accessed via the <code class="docutils literal notranslate"><span class="pre">array</span></code> attribute.</p>
@@ -894,10 +894,10 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-09-07 11:04:29,697[DEBUG] # of operator terms: 3
-2025-09-07 11:04:29,698[DEBUG] Input operator terms: 3
-2025-09-07 11:04:29,699[DEBUG] After combination of the same terms: 3
-2025-09-07 11:04:29,700[DEBUG] symbolic mpo algorithm: qr
+2025-09-07 11:20:37,036[DEBUG] # of operator terms: 3
+2025-09-07 11:20:37,037[DEBUG] Input operator terms: 3
+2025-09-07 11:20:37,038[DEBUG] After combination of the same terms: 3
+2025-09-07 11:20:37,039[DEBUG] symbolic mpo algorithm: qr
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -906,8 +906,8 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(&lt;Matrix at 0x7f43ade51fd0 (1, 2, 2, 3) float64&gt;,
- &lt;Matrix at 0x7f43ade64c70 (3, 8, 8, 1) float64&gt;)
+(&lt;Matrix at 0x7f676c9f2310 (1, 2, 2, 3) float64&gt;,
+ &lt;Matrix at 0x7f6741e53f40 (3, 8, 8, 1) float64&gt;)
 </pre></div></div>
 </div>
 <p>Here the logging outputs that there are 3 terms in the Hamiltonian, since <span class="math notranslate nohighlight">\(\hat \sigma_z\)</span> with coefficient 0 is dropped automatically.</p>
@@ -962,9 +962,9 @@ array([ 0.41298208, -0.00752657,  0.17205047,  0.13905035,  0.20172165,
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2025-09-07 11:04:29,721[DEBUG] # of operator terms: 1
-2025-09-07 11:04:29,722[DEBUG] Input operator terms: 1
-2025-09-07 11:04:29,723[DEBUG] After combination of the same terms: 1
+2025-09-07 11:20:37,059[DEBUG] # of operator terms: 1
+2025-09-07 11:20:37,060[DEBUG] Input operator terms: 1
+2025-09-07 11:20:37,062[DEBUG] After combination of the same terms: 1
 </pre></div></div>
 </div>
 </section>
