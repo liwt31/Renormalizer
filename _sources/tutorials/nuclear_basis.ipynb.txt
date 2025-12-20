@@ -28,10 +28,10 @@
    "id": "a3c7be6c-e2d3-4a67-aeb1-e390f9a50361",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:40.888522Z",
-     "iopub.status.busy": "2025-12-19T13:17:40.888312Z",
-     "iopub.status.idle": "2025-12-19T13:17:44.868821Z",
-     "shell.execute_reply": "2025-12-19T13:17:44.868105Z"
+     "iopub.execute_input": "2025-12-20T03:38:41.708044Z",
+     "iopub.status.busy": "2025-12-20T03:38:41.707819Z",
+     "iopub.status.idle": "2025-12-20T03:38:45.470479Z",
+     "shell.execute_reply": "2025-12-20T03:38:45.469731Z"
     }
    },
    "outputs": [
@@ -39,35 +39,35 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2025-12-19 13:17:41,488[INFO] Use NumPy as backend\n"
+      "2025-12-20 03:38:42,349[INFO] Use NumPy as backend\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2025-12-19 13:17:41,489[INFO] numpy random seed is 9012\n"
+      "2025-12-20 03:38:42,350[INFO] numpy random seed is 9012\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2025-12-19 13:17:41,489[INFO] random seed is 1092\n"
+      "2025-12-20 03:38:42,350[INFO] random seed is 1092\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2025-12-19 13:17:41,499[INFO] Git Commit Hash: fe760f31c279f7f8644a2f2c9b85fcd58b472bd4\n"
+      "2025-12-20 03:38:42,360[INFO] Git Commit Hash: 940abbe8e26a22e9345f941947c6944ed81a5f06\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2025-12-19 13:17:41,501[INFO] use 64 bits\n"
+      "2025-12-20 03:38:42,361[INFO] use 64 bits\n"
      ]
     }
    ],
@@ -90,10 +90,10 @@
    "id": "43e06282-3791-4bd6-938f-90aa18a04352",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:44.872421Z",
-     "iopub.status.busy": "2025-12-19T13:17:44.871130Z",
-     "iopub.status.idle": "2025-12-19T13:17:44.875221Z",
-     "shell.execute_reply": "2025-12-19T13:17:44.874660Z"
+     "iopub.execute_input": "2025-12-20T03:38:45.473269Z",
+     "iopub.status.busy": "2025-12-20T03:38:45.472848Z",
+     "iopub.status.idle": "2025-12-20T03:38:45.476253Z",
+     "shell.execute_reply": "2025-12-20T03:38:45.475681Z"
     }
    },
    "outputs": [],
@@ -107,10 +107,10 @@
    "id": "c41a8dc5-28a3-403c-bcfd-39087875764e",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:44.877314Z",
-     "iopub.status.busy": "2025-12-19T13:17:44.876930Z",
-     "iopub.status.idle": "2025-12-19T13:17:44.886800Z",
-     "shell.execute_reply": "2025-12-19T13:17:44.886264Z"
+     "iopub.execute_input": "2025-12-20T03:38:45.478380Z",
+     "iopub.status.busy": "2025-12-20T03:38:45.478001Z",
+     "iopub.status.idle": "2025-12-20T03:38:45.487558Z",
+     "shell.execute_reply": "2025-12-20T03:38:45.487012Z"
     }
    },
    "outputs": [],
@@ -140,10 +140,10 @@
    "id": "4b21a5f9-39b1-4f3e-98e6-8dea0b810526",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:44.888917Z",
-     "iopub.status.busy": "2025-12-19T13:17:44.888576Z",
-     "iopub.status.idle": "2025-12-19T13:17:50.937518Z",
-     "shell.execute_reply": "2025-12-19T13:17:50.936747Z"
+     "iopub.execute_input": "2025-12-20T03:38:45.489692Z",
+     "iopub.status.busy": "2025-12-20T03:38:45.489325Z",
+     "iopub.status.idle": "2025-12-20T03:38:51.572957Z",
+     "shell.execute_reply": "2025-12-20T03:38:51.572153Z"
     }
    },
    "outputs": [
@@ -223,10 +223,10 @@
    "id": "9dce33c0-e5d1-4232-b2fc-993d30528a2a",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:50.940075Z",
-     "iopub.status.busy": "2025-12-19T13:17:50.939654Z",
-     "iopub.status.idle": "2025-12-19T13:17:50.989583Z",
-     "shell.execute_reply": "2025-12-19T13:17:50.989005Z"
+     "iopub.execute_input": "2025-12-20T03:38:51.575536Z",
+     "iopub.status.busy": "2025-12-20T03:38:51.575030Z",
+     "iopub.status.idle": "2025-12-20T03:38:51.626683Z",
+     "shell.execute_reply": "2025-12-20T03:38:51.625940Z"
     }
    },
    "outputs": [],
@@ -270,10 +270,10 @@
    "id": "fab4d11e-80b7-4eac-b240-69c5a300a7d4",
    "metadata": {
     "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:50.991810Z",
-     "iopub.status.busy": "2025-12-19T13:17:50.991606Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.137747Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.136946Z"
+     "iopub.execute_input": "2025-12-20T03:38:51.629335Z",
+     "iopub.status.busy": "2025-12-20T03:38:51.628952Z",
+     "iopub.status.idle": "2025-12-20T03:38:56.859031Z",
+     "shell.execute_reply": "2025-12-20T03:38:56.858232Z"
     }
    },
    "outputs": [
@@ -325,13 +325,10 @@
    "id": "d792525f-6215-436e-a923-fbaa4ffa2c29",
    "metadata": {},
    "source": [
-    "## Notes on the truncation level or number of basis states\n",
+    "## Final Remarks\n",
     "In tensor network calculations, the number of basis functions for each phonon mode is another parameter that must be checked for convergence manually. A common starting point is to set this number to 16.\n",
     "\n",
-    "At zero temperature, the required number of basis functions is primarily determined by the coupling strength. \n",
-    "\n",
-    "If there are a lot of different modes in the model, setting the number of basis states to the same number can be inefficient. \n",
-    "An empirical and usually safe estimate of the number of basis states, adaptive to the coupling strength, is given by\n",
+    "At zero temperature, the required number of basis functions is primarily determined by the coupling strength. An empirical and usually safe estimate is given by\n",
     "$$\\rm{max}(16c^2/\\omega^3, 4)$$\n",
     "where $c$ is the coupling strength constant in coupling terms such as $cx\\sigma_z$. Note that $c^2/2\\omega^3$ is the Huang–Rhys factor.\n",
     "\n",
@@ -339,591 +336,12 @@
    ]
   },
   {
-   "cell_type": "markdown",
-   "id": "226c18fb-b9a9-4136-9677-6b99eaef34ca",
-   "metadata": {},
-   "source": [
-    "## Nuclear basis sets in Renormalizer\n",
-    "### `BasisSHO`\n",
-    "The most commonly used nuclear basis set is `BasisSHO`, which has been demonstrated above. The basis set is best used with second-quantization.\n",
-    "If the nuclear DoF is a harmonic oscillilator, using `BasisSHO` usually shows fastest convergence of the number of bases, particularly for high frequency or low coupling-strength modes.\n",
-    "In these cases, using 4 bases is sometimes sufficient to obtain very accurate result.\n",
-    "Besides, the ground state can be easily specified as `[1, 0, 0, ..., 0]`.\n",
-    "\n",
-    "#### Basic Usage\n",
-    "In the following we employ `nbas=4` for demonstration purposes. As mentioned above usually 16 bases are a good starting point for production calculation."
-   ]
-  },
-  {
    "cell_type": "code",
-   "execution_count": 7,
-   "id": "7e742895-d3b8-4795-852d-6275c265ce88",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.140443Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.140073Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.145753Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.145147Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[0., 0., 0., 0.],\n",
-       "       [0., 1., 0., 0.],\n",
-       "       [0., 0., 2., 0.],\n",
-       "       [0., 0., 0., 3.]])"
-      ]
-     },
-     "execution_count": 7,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "omega = 2\n",
-    "basis = BasisSHO(0, omega=omega, nbas=4)\n",
-    "basis.op_mat(\"b^\\dagger b\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 8,
-   "id": "ebeb6474-d2dc-477d-bdee-96bac61de49d",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.147763Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.147561Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.152118Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.151590Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[0.        , 1.        , 0.        , 0.        ],\n",
-       "       [1.        , 0.        , 1.41421356, 0.        ],\n",
-       "       [0.        , 1.41421356, 0.        , 1.73205081],\n",
-       "       [0.        , 0.        , 1.73205081, 0.        ]])"
-      ]
-     },
-     "execution_count": 8,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis.op_mat(\"b^\\dagger+b\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "8f1b3aca-9ca9-4653-a866-46cc614d03b0",
-   "metadata": {},
-   "source": [
-    "The operators supported by the basis set include `\"b^\\dagger b\"`, `\"b^\\dagger+b\"`, `\"b^\\dagger-b\"` and so on.\n",
-    "\n",
-    "The basis set also supports first-quantized operators, following\n",
-    "$$\n",
-    "x = \\frac{1}{\\sqrt{2\\omega}} (b^\\dagger + b)\n",
-    "$$"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "id": "5a6a7c15-f059-47ed-8fba-975582a17845",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.154073Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.153876Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.158558Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.157978Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[0.        , 0.5       , 0.        , 0.        ],\n",
-       "       [0.5       , 0.        , 0.70710678, 0.        ],\n",
-       "       [0.        , 0.70710678, 0.        , 0.8660254 ],\n",
-       "       [0.        , 0.        , 0.8660254 , 0.        ]])"
-      ]
-     },
-     "execution_count": 9,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis.op_mat(\"x\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "df5a59fe-1e2a-4f8c-bb6e-66c22f459a81",
-   "metadata": {},
-   "source": [
-    "The mass is assumed to be 1, or scaled into $x$. \n",
-    "\n",
-    "The energy operator in terms of $x$ and $p$ is given by \n",
-    "$$\n",
-    "H = \\frac{1}{2} p^2 + \\frac{1}{2} \\omega^2 x^2\n",
-    "$$\n",
-    "or the following code"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": null,
    "id": "eea8d09c-e3df-4e35-8ee5-a01567454e8c",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.160467Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.160271Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.165522Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.164847Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[1., 0., 0., 0.],\n",
-       "       [0., 3., 0., 0.],\n",
-       "       [0., 0., 5., 0.],\n",
-       "       [0., 0., 0., 7.]])"
-      ]
-     },
-     "execution_count": 10,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis.op_mat(\"p^2\")/2 + 1/2 * omega** 2 * basis.op_mat(\"x^2\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "f1b2f84e-9c9a-47df-bcf9-1f9c6819fd9d",
    "metadata": {},
-   "source": [
-    "#### DVR basis\n",
-    "To use grid basis (DVR) based on `BasisSHO`, set `dvr=True`. The `x` matrix then becomes diagonal."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 11,
-   "id": "6b909bd3-1782-4e83-ad61-2d5d0820d860",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.167779Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.167575Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.174198Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.173494Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[-1.16720711,  0.        ,  0.        ,  0.        ],\n",
-       "       [ 0.        , -0.37098189,  0.        ,  0.        ],\n",
-       "       [ 0.        ,  0.        ,  0.37098189,  0.        ],\n",
-       "       [ 0.        ,  0.        ,  0.        ,  1.16720711]])"
-      ]
-     },
-     "execution_count": 11,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis = BasisSHO(0, omega=omega, nbas=4, dvr=True)\n",
-    "basis.op_mat(\"x\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "c41ba158-b0d9-4d7c-b784-fd3b56611783",
-   "metadata": {},
-   "source": [
-    "The grid points are accessible from `basis.dvr_x`"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 12,
-   "id": "6e79927f-030a-49c7-800e-89e3f864e246",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.176791Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.176551Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.183248Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.182611Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([-1.16720711, -0.37098189,  0.37098189,  1.16720711])"
-      ]
-     },
-     "execution_count": 12,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis.dvr_x"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "403aa417-d02a-41f9-9f1c-740860cfae75",
-   "metadata": {},
-   "source": [
-    "In DVR basis, the Hamiltonian matrix is not diagonal anymore."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 13,
-   "id": "c45927ba-4734-4b89-a2b3-3ff39bd56b68",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.186958Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.185706Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.193572Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.192944Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([[ 4.31649658, -1.07735027, -0.07735027,  0.31649658],\n",
-       "       [-1.07735027,  2.68350342, -1.31649658, -0.07735027],\n",
-       "       [-0.07735027, -1.31649658,  2.68350342, -1.07735027],\n",
-       "       [ 0.31649658, -0.07735027, -1.07735027,  4.31649658]])"
-      ]
-     },
-     "execution_count": 13,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "h_mat = basis.op_mat(\"p^2\")/2 + 1/2 * omega** 2 * basis.op_mat(\"x^2\")\n",
-    "h_mat"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "2b0bd16b-9cff-4606-adc8-b2011ff3b86e",
-   "metadata": {},
-   "source": [
-    "However, we can still reliably obtain the low-energy spectrum"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 14,
-   "id": "e3ec329c-38e7-4863-b5d9-06e4d22e5631",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.196148Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.195928Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.203552Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.202540Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([1., 3., 5., 5.])"
-      ]
-     },
-     "execution_count": 14,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "np.linalg.eigvalsh(h_mat)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "9bde42a7-8e7f-47ad-a09b-38a10a9601cf",
-   "metadata": {},
-   "source": [
-    "With `dvr=True`, second-quantized operators such as `\"b^\\dagger + b\"` become ill-defined. Do not mix DVR with second-quantization."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "4a866762-3648-44cb-ab4c-1d783afc2a68",
-   "metadata": {},
-   "source": [
-    "Note that when `dvr=True`, the ground state is not `[1, 0, 0, ..., 0]` anymore. You need to compute the wavefunction amplitudes on the grid points `basis.dvr_x`."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "b5e89e61-2445-45a1-93e1-b6eb90a4e549",
-   "metadata": {},
-   "source": [
-    "#### Dimensionless coordinate and momentum\n",
-    "\n",
-    "By default, the coordinate $x$ and momentum $p$ in Renormalizer and `BasisSHO` are dimensional.\n",
-    "\n",
-    "Sometimes, it is desirable to use dimensionless $x$ and $p$ by scaling with $\\omega$\n",
-    "$$\n",
-    "x \\rightarrow \\sqrt{\\omega}x\n",
-    "$$\n",
-    "$$\n",
-    "p \\rightarrow p/\\sqrt{\\omega}\n",
-    "$$\n",
-    "The Hamiltonian is then expressed as\n",
-    "$$\n",
-    "H = \\frac{\\omega}{2} (p^2 + x^2)\n",
-    "$$\n",
-    "which shows a closer connection to the second-quantized form.\n",
-    "\n",
-    "To scale $x$ and $p$ with $\\omega$, such that the Hamiltonian can be written as $\\frac{\\omega}{2}(p^2+x^2)$, set `scale_omega=True` when intializing the basis set."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 15,
-   "id": "2f169161-8084-48d0-a768-57d6e7797668",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.207151Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.206923Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.221638Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.220555Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([1., 3., 5., 5.])"
-      ]
-     },
-     "execution_count": 15,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis = BasisSHO(0, omega=omega, nbas=4, dvr=True, scale_omega=True)\n",
-    "# The harmonic oscillator Hamiltonian with the dimensionless x and p\n",
-    "h_mat = 1/2 * omega * (basis.op_mat(\"p^2\") + basis.op_mat(\"x^2\"))\n",
-    "np.linalg.eigvalsh(h_mat)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "ddecc430-fe7f-447c-a467-bb080256445a",
-   "metadata": {},
-   "source": [
-    "The effect is the same as setting `omega=1` when creating the `BaisSHO` instance."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 16,
-   "id": "a4d97113-5c5a-4cb6-a4ed-c303b29d5e6d",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.225151Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.224923Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.239113Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.237987Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([1., 3., 5., 5.])"
-      ]
-     },
-     "execution_count": 16,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis = BasisSHO(0, omega=1, nbas=4, dvr=True)\n",
-    "# The harmonic oscillator Hamiltonian with the dimensionless x and p\n",
-    "h_mat = 1/2 * omega * (basis.op_mat(\"p^2\") + basis.op_mat(\"x^2\"))\n",
-    "np.linalg.eigvalsh(h_mat)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "9fcac33d-4bd5-4bbb-bff8-1eb87135267d",
-   "metadata": {},
-   "source": [
-    "### `BasisSineDVR`\n",
-    "`BasisSineDVR` is a basis based on particle-in-a-box. \n",
-    "By default, `BasisSineDVR` is not a grid basis, because it uses the sin function as the basis, and the $x$ matrix is not diagonal. \n",
-    "Set `dvr=True` such that the $x$ matrix becomes (approximately) diagonal.\n",
-    "\n",
-    "`BasisSineDVR` is best used with first-quantization and complicated nuclear potential.\n",
-    "\n",
-    "Usually, `BasisSineDVR` requires > 16 bases for reasonable numerical result. Note that usually you must carefully specify the initial state."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 17,
-   "id": "6b94de20-ce0d-4a2c-8485-37f5ab65947e",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.243507Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.242412Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.250331Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.249420Z"
-    }
-   },
    "outputs": [],
-   "source": [
-    "from renormalizer import BasisSineDVR\n",
-    "# particle in a box. Range of grid is -3 to 3 with 16 grid points.\n",
-    "basis = BasisSineDVR(0, nbas=16, xi=-3, xf=3, dvr=True)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "8ea667cc-abc0-4c68-8250-8a2f4be530d3",
-   "metadata": {},
-   "source": [
-    "The grid points for the DVR basis can be accessed via `dvr_x`"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 18,
-   "id": "22bdd4dd-19a5-4c07-ae02-bc5087002d2c",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.254562Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.253450Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.263141Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.262084Z"
-    },
-    "scrolled": true
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([-2.64705882, -2.29411765, -1.94117647, -1.58823529, -1.23529412,\n",
-       "       -0.88235294, -0.52941176, -0.17647059,  0.17647059,  0.52941176,\n",
-       "        0.88235294,  1.23529412,  1.58823529,  1.94117647,  2.29411765,\n",
-       "        2.64705882])"
-      ]
-     },
-     "execution_count": 18,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "basis.dvr_x"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "095f0269-5cfd-44c1-b614-a34445cfd2d8",
-   "metadata": {},
-   "source": [
-    "The following cell numrically solves the quantum harmonic oscillator using `BasisSineDVR`"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 19,
-   "id": "4be72631-1f44-406a-8848-94ef439b3ebd",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.267226Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.267001Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.277552Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.276467Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([ 1.00000014,  3.00000478,  5.00007562,  7.00073986,  9.00498407,\n",
-       "       11.02437122, 13.0895611 , 15.25579691, 17.59098891, 20.15271789,\n",
-       "       22.97765728, 26.07693738, 29.49028804, 33.14265301, 38.673214  ,\n",
-       "       42.8094536 ])"
-      ]
-     },
-     "execution_count": 19,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "h_mat = basis.op_mat(\"p^2\")/2 + 1/2 * omega** 2 * basis.op_mat(\"x^2\")\n",
-    "np.linalg.eigvalsh(h_mat)"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "id": "486f1a27-e787-4a95-a090-fc4335e2f6ce",
-   "metadata": {},
-   "source": [
-    "If the nuclear DoF is a harmonic oscillator, the following wavefunction should be put into the `condition` argument when initializing the ground state MPS.\n",
-    "The default condition will set the wavefunction to a high-energy $\\delta$ function."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 20,
-   "id": "e2fe47d2-a21f-4ffa-9b52-edde39ec2cd2",
-   "metadata": {
-    "execution": {
-     "iopub.execute_input": "2025-12-19T13:17:56.281098Z",
-     "iopub.status.busy": "2025-12-19T13:17:56.280877Z",
-     "iopub.status.idle": "2025-12-19T13:17:56.288568Z",
-     "shell.execute_reply": "2025-12-19T13:17:56.287961Z"
-    }
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([-4.70136802e-04, -2.74685458e-03, -1.22547067e-02, -4.25908201e-02,\n",
-       "       -1.15374089e-01, -2.43614258e-01, -4.00957667e-01, -5.14394732e-01,\n",
-       "       -5.14394732e-01, -4.00957667e-01, -2.43614258e-01, -1.15374089e-01,\n",
-       "       -4.25908201e-02, -1.22547067e-02, -2.74685458e-03, -4.70136802e-04])"
-      ]
-     },
-     "execution_count": 20,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "np.linalg.eigh(h_mat)[1][:, 0]"
-   ]
+   "source": []
   }
  ],
  "metadata": {
