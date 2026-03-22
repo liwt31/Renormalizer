@@ -24,20 +24,6 @@ class CompressCriteria(Enum):
     both = "both"
 
 
-class OFS(Enum):
-    """
-    On the fly swapping criteria
-    """
-    # based on entanglement entropy
-    ofs_s = "OFS-S"
-    # a hybrid scheme
-    ofs_ds = "OFS-D/S"
-    # based on discarded weight
-    ofs_d = "OFS-D"
-    # debug mode. Dry run the code without performing the swapping
-    ofs_debug = "OFS-Debug"
-
-
 class CompressConfig:
     """MPS/MPO Compress Configuration.
 
@@ -110,14 +96,6 @@ class CompressConfig:
     dump_matrix_dir : str, optional
         The directory to dump matrix when matrix is larger than ``dump_matrix_size``.
 
-    ofs : `OFS`, optional
-        Whether optimize the DOF ordering by OFS. The default value is ``None`` which means does not perform OFS.
-
-    ofs_swap_jw : bool, optional
-        Whether swap the Jordan-Wigner transformation ordering when OFS is enabled. Set to ``True``
-        for and only for ab initio Hamiltonian constructed by the experimental
-        ``renormalizer.model.h_qc.qc_model``. Default is ``False``.
-
     See Also
     --------
     CompressCriteria : Compression criteria
@@ -135,9 +113,7 @@ class CompressConfig:
         vrtol = 1e-5,
         vguess_m = (5,5),
         dump_matrix_size = np.inf,
-        dump_matrix_dir = "./",
-        ofs: OFS = None,
-        ofs_swap_jw: bool = False
+        dump_matrix_dir = "./"
     ):
         # two sets of criteria here: threshold and max_bonddimension
         # `criteria` is to determine which to use
@@ -170,9 +146,6 @@ class CompressConfig:
 
         self.dump_matrix_size = dump_matrix_size
         self.dump_matrix_dir = dump_matrix_dir
-
-        self.ofs: OFS = ofs
-        self.ofs_swap_jw: bool = ofs_swap_jw
 
     @property
     def threshold(self):

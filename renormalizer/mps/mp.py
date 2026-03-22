@@ -26,7 +26,7 @@ from renormalizer.mps.lib import (
     select_basis,
     )
 from renormalizer.mps.hop_expr import hop_expr
-from renormalizer.utils import sizeof_fmt, CompressConfig, CompressCriteria, OFS, calc_vn_entropy
+from renormalizer.utils import sizeof_fmt, CompressConfig, CompressCriteria, calc_vn_entropy
 
 logger = logging.getLogger(__name__)
 
@@ -622,9 +622,6 @@ class MatrixProduct:
                 # clean up the elements which do not meet the qn requirements
                 cout[~qn_mask] = 0
                 mps._update_mps(cout, cidx, qnbigl, qnbigr, percent)
-                if mps.compress_config.ofs is not None:
-                    # need to swap the original MPS. Tedious to implement and probably not useful.
-                    raise NotImplementedError("OFS for variational compress not implemented")
 
             mps._switch_direction()
 
@@ -687,74 +684,11 @@ class MatrixProduct:
 
         # step 1: get the selected U, S, V
         if type(cstruct) is not list:
-            if self.compress_config.ofs is None:
-                # SVD method
-                # full_matrices = True here to enable increase the bond dimension
-                Uset, SUset, qnlnew, Vset, SVset, qnrnew = svd_qn.svd_qn(
-                    asnumpy(cstruct), qnbigl, qnbigr, self.qntot, system=system
-                )
-            else:
-                if isinstance(self.model, HolsteinModel):
-                    # the HolsteinModel class methods are incompatible with OFS
-                    raise NotImplementedError("Can't perform OFS on Holstein model")
-
-                qnbigl1, qnbigr1 = qnbigl, qnbigr
-                Uset1, SUset1, qnlnew1, Vset1, SVset1, qnrnew1 = svd_qn.svd_qn(
-                    asnumpy(cstruct), qnbigl1, qnbigr1, self.qntot, system=system
-                )
-                qnbigl2, qnbigr2, _ = self._get_big_qn(cidx, swap=True)
-                if cstruct.ndim == 4:
-                    cstruct2 = asnumpy(cstruct).transpose(0, 2, 1, 3)
-                else:
-                    assert cstruct.ndim == 6
-                    cstruct2 = asnumpy(cstruct).transpose(0, 3, 4, 1, 2, 5)
-                if self.compress_config.ofs_swap_jw:
-                    assert cstruct2.ndim == 4
-                    cstruct2 = cstruct2.copy()
-                    cstruct2[:, 1, 1, :] = -cstruct2[:, 1, 1, :]
-                Uset2, SUset2, qnlnew2, Vset2, SVset2, qnrnew2 = svd_qn.svd_qn(
-                    cstruct2, qnbigl2, qnbigr2, self.qntot, system=system
-                )
-                entropy1 = calc_vn_entropy(SUset1**2)
-                entropy2 = calc_vn_entropy(SUset2**2)
-
-                # TODO: more general control according to
-                # CompressCriteria.thresh
-                assert self.compress_config.criteria == CompressCriteria.fixed
-                Mmax = self.compress_config.bond_dim_max_value
-
-                loss1 = (np.sort(SUset1)[::-1][Mmax:] ** 2).sum()
-                loss2 = (np.sort(SUset2)[::-1][Mmax:] ** 2).sum()
-                ofs = self.compress_config.ofs
-                if ofs is OFS.ofs_d:
-                    should_retain = loss1 <= loss2
-                elif ofs is OFS.ofs_ds:
-                    if loss1 < 1e-10 and loss2 < 1e-10:
-                        # at the end of the chain
-                        should_retain = entropy1 <= entropy2
-                    else:
-                        should_retain = loss1 <= loss2
-                elif ofs is OFS.ofs_s:
-                    should_retain = entropy1 <= entropy2
-                else:
-                    assert ofs is  OFS.ofs_debug
-                    should_retain = True
-                logger.debug(f"OFS: site index {cidx}, should swap: {not should_retain}, "
-                             f"S: {entropy1}, {entropy2}, loss: {loss1}, {loss2}")
-                if should_retain:
-                    Uset, SUset, qnlnew, Vset, SVset, qnrnew = \
-                        Uset1, SUset1, qnlnew1, Vset1, SVset1, qnrnew1
-                else:
-                    Uset, SUset, qnlnew, Vset, SVset, qnrnew = \
-                        Uset2, SUset2, qnlnew2, Vset2, SVset2, qnrnew2
-                    qnbigl, qnbigr, cstruct = qnbigl2, qnbigr2, cstruct2
-                    new_basis = self.model.basis.copy()
-                    new_basis[cidx[0]:cidx[1] + 1] = reversed(self.model.basis[cidx[0]:cidx[1] + 1])
-                    # previously cached MPOs are destroyed.
-                    # Not sure what is the best way: swap all cached MPOs or simply reconstruct them
-                    # Need some additional testing at production level calculation
-                    self.model: Model = Model(new_basis, self.model.ham_terms, self.model.dipole, self.model.output_ordering)
-                logger.debug(f"DOF ordering: {[b.dof for b in self.model.basis]}")
+            # SVD method
+            # full_matrices = True here to enable increase the bond dimension
+            Uset, SUset, qnlnew, Vset, SVset, qnrnew = svd_qn.svd_qn(
+                asnumpy(cstruct), qnbigl, qnbigr, self.qntot, system=system
+            )
 
             if self.to_right:
                 m_trunc = self.compress_config.compute_m_trunc(

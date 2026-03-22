@@ -296,9 +296,7 @@ class SpectraZtCV(SpectraCv):
         l_value = xp.dot(asxp(hop(x)), asxp(x)) - 2 * xp.dot(vec_b, asxp(x))
         xstruct = cvec2cmat(x, qn_mask)
         self.cv_mps._update_mps(xstruct, cidx, qnbigl, qnbigr, percent)
-        if self.cv_mps.compress_config.ofs is not None:
-            raise NotImplementedError("OFS for correction vector not implemented")
-        
+
         return float(l_value)
 
     # It is suggested the initial_LR and update_LR can make use of Environ

@@ -14,7 +14,7 @@ from renormalizer.mps.mp import MatrixProduct
 from renormalizer.mps.svd_qn import add_outer
 from renormalizer.mps import svd_qn
 from renormalizer.mps.lib import update_cv
-from renormalizer.mps.symbolic_mpo import construct_symbolic_mpo, _terms_to_table, symbolic_mo_to_numeric_mo, swap_site
+from renormalizer.mps.symbolic_mpo import construct_symbolic_mpo, _terms_to_table, symbolic_mo_to_numeric_mo
 from renormalizer.utils import Quantity
 from renormalizer.model.op import Op
 from renormalizer.utils.elementop import (
@@ -423,35 +423,6 @@ class Mpo(MatrixProduct):
             assert False
 
         return new_mps
-
-    def try_swap_site(self, new_model: Model, swap_jw: bool, algo="Hopcroft-Karp"):
-        # in place swapping.
-        # if swap_jw is set to True, then self.primary_ops is modified in place
-        diffs = []
-        for i, (b1, b2) in enumerate(zip(self.model.basis, new_model.basis)):
-            if b1.dofs != b2.dofs:
-                diffs.append(i)
-        if len(diffs) == 0:
-            logger.debug("MPO: No need to swap")
-            return
-        assert len(diffs) == 2
-        i, j = min(diffs), max(diffs)
-        assert j - i == 1
-        logger.debug(f"MPO: swaping {i} and {j}")
-        # although usually the `model` of MPO does not store `mpos`
-        new_model.mpos.clear()
-
-        out_ops2, out_ops3, mo1, mo2, qn = \
-            swap_site(self.symbolic_out_ops_list[i:i+3], self.primary_ops, swap_jw, algo=algo)
-
-        self.symbolic_out_ops_list[i+1] = out_ops2
-        self.symbolic_out_ops_list[i+2] = out_ops3
-        self.model = new_model
-        self.qn[i+1] = qn
-
-        for impo, mo in zip([i, j], [mo1, mo2]):
-            self[impo] = symbolic_mo_to_numeric_mo(new_model.basis[impo], mo, self.dtype)
-        logger.debug(self)
 
     def conj_trans(self):
         new_mpo = self.metacopy()

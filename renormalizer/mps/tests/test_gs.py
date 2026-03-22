@@ -11,7 +11,6 @@ from renormalizer.mps.backend import primme
 from renormalizer.mps.gs import construct_mps_mpo, optimize_mps, DmrgFCISolver
 from renormalizer.mps import Mpo, Mps, StackedMpo
 from renormalizer.tests.parameter import holstein_model
-from renormalizer.utils.configs import OFS
 from renormalizer.mps.tests import cur_dir
 
 
@@ -86,23 +85,8 @@ def test_ex(method, nroots):
         assert np.allclose([ms.expectation(mpo) for ms in mps], energy_std)
 
 
-def test_ofs():
-    # `switch_scheme` makes copy, so `holstein_model` is not changed during OFS
-    mps, mpo = construct_mps_mpo(holstein_model.switch_scheme(1), procedure[0][0], nexciton)
-    # transform from HolsteinModel to the general Model
-    mps.model = Model(mps.model.basis, mps.model.ham_terms)
-    mps.optimize_config.procedure = procedure
-    mps.optimize_config.method = "2site"
-    mps.compress_config.ofs = OFS.ofs_s
-    energies, mps_opt = optimize_mps(mps.copy(), mpo)
-    assert energies[-1] == pytest.approx(GS_E, rel=1e-5)
-    mpo = Mpo(mps_opt.model)
-    assert mps_opt.expectation(mpo) == pytest.approx(GS_E, rel=1e-5)
-
-
-@pytest.mark.parametrize("with_ofs", (True, False))
 @pytest.mark.parametrize("stacked", (True, False))
-def test_qc(with_ofs, stacked):
+def test_qc(stacked):
     """
     m = M(atom=[["H", np.cos(theta), np.sin(theta), 0] for theta in 2*np.pi/6 * np.arange(6)], basis="STO-3G")
     hf = m.HF()
@@ -138,9 +122,6 @@ def test_qc(with_ofs, stacked):
     #print("hf energy", mps.expectation(mpo))
     mps.optimize_config.procedure = procedure
     mps.optimize_config.method = "2site"
-    if with_ofs:
-        mps.compress_config.ofs = OFS.ofs_s
-        mps.compress_config.ofs_swap_jw = True
     energies, mps = optimize_mps(mps.copy(), mpo)
     print(mpo)
     gs_e = min(energies)

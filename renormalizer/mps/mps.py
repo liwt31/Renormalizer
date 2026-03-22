@@ -1481,8 +1481,6 @@ class Mps(MatrixProduct):
                 mps_t = mps_t.reshape(ms2.shape)
                 qnbigl, qnbigr, _ = mps._get_big_qn([cidx0, cidx1])
                 mps._update_mps(mps_t, [cidx0, cidx1], qnbigl, qnbigr)
-                if mps.compress_config.ofs is not None:
-                    mpo.try_swap_site(mps.model, mps.compress_config.ofs_swap_jw)
                 if imps == last_idx:
                     continue
 
@@ -1973,10 +1971,124 @@ def expand_bond_dimension(mps, hint_mpo=None, coef=1e-10, include_ex=True):
     return expand_bond_dimension_general(mps, hint_mpo, coef, ex_state)
 
 
+def _expand_bond_dimension_sweep(mps, hint_mpo, coef=1e-10, ex_mps=None):
+    """
+    Expand bond dimensions via two-site sweeps.
+    At each bond, applies the two-site effective Hamiltonian (and optionally
+    blends with ex_mps) to identify expansion directions, then pads the bond
+    space with those directions scaled by a small coefficient.
+    Sweeps repeatedly until target bond dimensions are reached.
+    """
+
+    mps = mps.copy()
+    mps.compress_config.set_bonddim(len(mps) + 1)
+    norm = mps.mp_norm
+
+    # Blend ex_mps into mps at the MPS level before sweeping.
+    # ex_mps may have different bond dimensions, so compress first.
+    if ex_mps is not None:
+        mps = (mps + ex_mps.scale(coef * norm / ex_mps.mp_norm)).canonicalise()
+        mps.compress_config.set_bonddim(len(mps) + 1)
+
+    # Use fixed bond dimension criteria during expansion so that
+    # small singular values from the blended directions are not truncated away.
+    orig_criteria = mps.compress_config.criteria
+    mps.compress_config.criteria = CompressCriteria.fixed
+
+    # Ensure left-canonical form
+    mps.move_qnidx(0)
+    mps.to_right = True
+    mps.canonicalise()
+
+    target_dims = np.minimum(
+        np.array(mps.compress_config.max_dims),
+        np.array(mps.bond_dims_exact)
+    ).astype(int)
+    max_sweeps = 20  # safety limit
+
+    for sweep in range(max_sweeps):
+        current_dims = np.array(mps.bond_dims)
+        if np.all(current_dims >= target_dims):
+            break
+
+        prev_dims = current_dims.copy()
+        environ = Environ(mps, hint_mpo)
+
+        for imps in mps.iter_idx_list(full=False):
+            if mps.to_right:
+                cidx0, cidx1 = imps, imps + 1
+            else:
+                cidx0, cidx1 = imps - 1, imps
+            lidx = cidx0 - 1
+            ridx = cidx1 + 1
+
+            # Check if expansion needed at this bond
+            bond_idx = cidx1
+            if mps.bond_dims[bond_idx] >= target_dims[bond_idx]:
+                # Still update canonical center and environment
+                if mps.to_right:
+                    mps._push_cano(cidx0)
+                    environ.GetLR("L", cidx0, mps, hint_mpo, method="System")
+                else:
+                    mps._push_cano(cidx1)
+                    environ.GetLR("R", cidx1, mps, hint_mpo, method="System")
+                continue
+
+            l_array = environ.read("L", lidx)
+            r_array = environ.read("R", ridx)
+
+            # Merge two-site tensor
+            ms2 = tensordot(mps[cidx0], mps[cidx1], axes=1)
+
+            # Apply two-site effective Hamiltonian
+            hop = hop_expr(l_array, r_array,
+                           [asxp(hint_mpo[cidx0].array), asxp(hint_mpo[cidx1].array)],
+                           ms2.shape)
+            h_ms2 = hop(ms2)
+
+            # Blend: original + small perturbation from H|psi> and ex_mps
+            blended = asnumpy(ms2)
+
+            h_norm = xp.linalg.norm(h_ms2)
+            if h_norm > 1e-15:
+                blended = blended + coef * norm * asnumpy(h_ms2) / float(h_norm)
+
+            # SVD + truncation to target max_dims
+            qnbigl, qnbigr, _ = mps._get_big_qn([cidx0, cidx1])
+            mps._update_mps(blended, [cidx0, cidx1], qnbigl, qnbigr)
+
+            # Update environment for next bond
+            if mps.to_right:
+                environ.GetLR("L", cidx0, mps, hint_mpo,
+                              itensor=l_array, method="System")
+            else:
+                environ.GetLR("R", cidx1, mps, hint_mpo,
+                              itensor=r_array, method="System")
+
+        mps._switch_direction()
+
+        # Check if bond dimensions are still growing (compare with 2 sweeps ago
+        # since L->R and R->L sweeps produce different dim patterns)
+        new_dims = np.array(mps.bond_dims)
+        logger.debug(f"expand sweep {sweep}: bond dims {new_dims.tolist()}")
+        if sweep >= 1 and np.all(new_dims <= prev_dims):
+            logger.debug("Bond dimensions stopped growing.")
+            break
+
+    # Compress to symmetrize bond dimensions, then restore original criteria
+    mps.canonicalise().compress(mps.compress_config.max_dims)
+    mps.compress_config.criteria = orig_criteria
+    return normalize(mps, "mps_norm_to_coeff")
+
+
 def expand_bond_dimension_general(mps, hint_mpo=None, coef=1e-10, ex_mps=None):
     """
     expand bond dimension as required in compress_config. works for both mps and ttns
     """
+
+    # For MPS/MpDm with hint_mpo, use the more efficient two-site sweep approach.
+    if hint_mpo is not None and hasattr(mps, "model"):
+        return _expand_bond_dimension_sweep(mps, hint_mpo, coef, ex_mps)
 
     if hasattr(mps, "model"):
         # MPS

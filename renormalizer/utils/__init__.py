@@ -11,7 +11,6 @@ from renormalizer.utils.configs import (
     EvolveMethod,
     RungeKutta,
     TaylorExpansion,
-    OFS,
 )
 
 from renormalizer.utils.tdmps import TdMpsJob

@@ -206,7 +206,6 @@ class Model:
         return mpos
 
     def copy(self):
-        # copy basis because it is mutable with OFS
         model =  Model(self.basis.copy(), self.ham_terms, self.dipole, self.output_ordering)
         # this is a shallow copy, in order to avoid infinite recursion
         model.mpos = self.mpos.copy()

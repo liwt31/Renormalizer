@@ -20,14 +20,14 @@ readme = "README.md"
 requires-python = ">=3.6"
 
 dependencies = [
-    "numpy==1.24.*",
-    "scipy==1.10.*",
-    "h5py==3.1.*",
-    "opt_einsum==3.3.*",
-    "sympy==1.11.*",
-    "print-tree2==0.9.10",
-    "PyYAML==5.4.*",
-    "qutip==4.6.*"
+    "numpy",
+    "scipy",
+    "h5py",
+    "opt_einsum",
+    "sympy",
+    "print-tree2",
+    "PyYAML",
+    "qutip"
 ]
 
 [project.optional-dependencies]

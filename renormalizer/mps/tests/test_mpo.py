@@ -41,42 +41,6 @@ def test_symbolic_mpo(nsites, nterms, algo):
     assert np.allclose(dense_mpo, qutip_ham.data.todense())
 
 
-@pytest.mark.parametrize("algo", ["qr", "Hopcroft-Karp"])
-def test_swap_symbolic_mpo(algo):
-    if algo == "qr":
-        # not efficient due to more terms in the table
-        # so use smaller system
-        nsites = 5
-        nterms = 100
-    else:
-        nsites = 10
-        nterms = 1000
-
-    possible_operators = [
-        "sigma_+",
-        "sigma_-",
-        "sigma_z"
-    ]
-    ham_terms = []
-    for i in range(nterms):
-        op_list = [Op(random.choice(possible_operators), j) for j in range(nsites)]
-        ham_terms.append(Op.product(op_list) * random.random())
-    basis = [BasisHalfSpin(i) for i in range(nsites)]
-    model = Model(basis, ham_terms)
-    mpo = Mpo(model, algo=algo)
-    for i in range(20):
-        isite1 = max(int(random.random() * nsites) - 1, 0)
-        isite2 = isite1 + 1
-        basis = basis.copy()
-        basis[isite1], basis[isite2] = basis[isite2], basis[isite1]
-        new_model = Model(basis, ham_terms)
-        mpo.try_swap_site(new_model, False, algo=algo)
-        ref_mpo = Mpo(new_model, algo=algo)
-        mpo_dense = mpo.todense()
-        ref_dense = ref_mpo.todense()
-        assert np.allclose(mpo_dense, ref_dense)
-
-
 @pytest.mark.parametrize("dt, space, shift", ([30, "GS", 0.0], [30, "EX", 0.0]))
 def test_exact_propagator(dt, space, shift):
     prop_mpo = Mpo.exact_propagator(holstein_model, -1.0j * dt, space, shift)
