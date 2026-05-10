@@ -159,6 +159,29 @@ def test_add(basis_tree):
 
 
 @pytest.mark.parametrize("basis_tree", [basis_binary, basis_multi_basis])
+def test_overlap(basis_tree):
+    ttns1 = TTNS.random(basis_tree, qntot=0, m_max=4).scale(1 + 0.2j)
+    ttns2 = TTNS.random(basis_tree, qntot=0, m_max=2).scale(0.7 - 0.3j)
+    overlap = ttns1.overlap(ttns2)
+    dense_overlap = ttns2.todense().ravel().conj() @ ttns1.todense().ravel()
+    np.testing.assert_allclose(overlap, dense_overlap)
+
+
+@pytest.mark.parametrize("basis_tree", [basis_binary, basis_multi_basis])
+def test_transition_expectation(basis_tree):
+    ttns1 = TTNS.random(basis_tree, qntot=0, m_max=4).scale(1 + 0.2j)
+    ttns2 = TTNS.random(basis_tree, qntot=0, m_max=2).scale(0.7 - 0.3j)
+    ttno = TTNO(basis_tree, heisenberg_ops(nspin))
+    transition = ttns1.expectation(ttno, bra=ttns2)
+    dense_transition = (
+        ttns2.todense().ravel().conj()
+        @ ttno.todense().reshape(2 ** nspin, 2 ** nspin)
+        @ ttns1.todense().ravel()
+    )
+    np.testing.assert_allclose(transition, dense_transition)
+
+
+@pytest.mark.parametrize("basis_tree", [basis_binary, basis_multi_basis])
 def test_apply(basis_tree):
     ttns1 = TTNS.random(basis_tree, qntot=0, m_max=4)
     ttno = TTNO(basis_tree, heisenberg_ops(nspin))
