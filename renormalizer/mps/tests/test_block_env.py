@@ -167,6 +167,35 @@ def test_block_hop_two_site_matches_dense_hop():
     )
     diff = dense_expr(center)[qn_mask] - block_expr(center)[qn_mask]
     assert np.max(np.abs(diff)) < 1e-12
+    packed_out = block_expr.apply_packed(np.asarray(center)[qn_mask])
+    assert np.max(np.abs(packed_out - block_expr(center)[qn_mask])) < 1e-12
+
+
+def test_center_block_layout_roundtrip():
+    mps, mpo = _toy_qc_mps_mpo(bond_dim=16)
+    mps.ensure_left_canonical()
+    mps.move_qnidx(1)
+    cidx = [1, 2]
+    center = np.asarray(tensordot(mps[cidx[0]], mps[cidx[1]], axes=1))
+    _qnbigl, _qnbigr, qnmat = mps._get_big_qn(cidx)
+    qn_mask = (qnmat == mps.qntot).all(axis=-1)
+    block_expr = block_hop_expr_two_site(
+        Environ(mps, mpo, use_block_env=True, block_env_min_bond_dim=0).read_raw("L", cidx[0] - 1),
+        Environ(mps, mpo, use_block_env=True, block_env_min_bond_dim=0).read_raw("R", cidx[1] + 1),
+        mpo[cidx[0]],
+        mpo[cidx[1]],
+        center.shape,
+        qn_mask,
+        mps.qn[cidx[0]],
+        mps.qn[cidx[1]],
+        mps.qn[cidx[1] + 1],
+        mpo.qn[cidx[0]],
+        mpo.qn[cidx[1]],
+        mpo.qn[cidx[1] + 1],
+    )
+    packed = block_expr.center_layout.pack(center)
+    unpacked = block_expr.center_layout.unpack(packed)
+    assert np.max(np.abs(unpacked[qn_mask] - center[qn_mask])) < 1e-14
 
 def test_block_env_qc_optimization_converges_to_dense_energy():
     mps0, mpo = _chain_qc_mps_mpo()

@@ -42,6 +42,66 @@ class BlockEnvData:
         return out
 
 
+@dataclass(frozen=True)
+class CenterBlock:
+    lidx: np.ndarray
+    ridx: np.ndarray
+    vec_idx: np.ndarray
+    shape: Tuple[int, int]
+
+
+class CenterBlockLayout:
+    """Map active two-site center vector segments to QN/physical blocks."""
+
+    def __init__(self, qn_mask: np.ndarray, left_qn: np.ndarray, right_qn: np.ndarray):
+        self.qn_mask = np.asarray(qn_mask)
+        self.shape = self.qn_mask.shape
+        self.size = int(np.count_nonzero(self.qn_mask))
+        flat_rank = np.full(self.qn_mask.size, -1, dtype=int)
+        flat_rank[np.flatnonzero(self.qn_mask.ravel())] = np.arange(self.size)
+
+        left_blocks = _qn_blocks(left_qn)
+        right_blocks = _qn_blocks(right_qn)
+        self.blocks: Dict[Tuple[Qn, int, int, Qn], CenterBlock] = {}
+        for lqn, lidx in left_blocks.items():
+            for rqn, ridx in right_blocks.items():
+                for p0 in range(self.shape[1]):
+                    for p1 in range(self.shape[2]):
+                        mask = self.qn_mask[np.ix_(lidx, [p0], [p1], ridx)][:, 0, 0, :]
+                        if not np.any(mask):
+                            continue
+                        if not np.all(mask):
+                            raise NotImplementedError("partial QN blocks are not supported")
+                        flat_idx = np.ravel_multi_index(
+                            np.ix_(lidx, [p0], [p1], ridx),
+                            self.shape,
+                        ).reshape(-1)
+                        vec_idx = flat_rank[flat_idx]
+                        self.blocks[(lqn, p0, p1, rqn)] = CenterBlock(
+                            lidx,
+                            ridx,
+                            vec_idx,
+                            (len(lidx), len(ridx)),
+                        )
+
+    def get(self, lqn: Qn, p0: int, p1: int, rqn: Qn) -> Optional[CenterBlock]:
+        return self.blocks.get((lqn, p0, p1, rqn))
+
+    def unpack(self, vec: np.ndarray):
+        out = np.zeros(self.shape, dtype=vec.dtype)
+        for key, block in self.blocks.items():
+            _lqn, p0, p1, _rqn = key
+            out[np.ix_(block.lidx, [p0], [p1], block.ridx)] = vec[block.vec_idx].reshape(block.shape)[:, None, None, :]
+        return out
+
+    def pack(self, center: np.ndarray):
+        out = np.empty(self.size, dtype=center.dtype)
+        for key, block in self.blocks.items():
+            _lqn, p0, p1, _rqn = key
+            out[block.vec_idx] = center[np.ix_(block.lidx, [p0], [p1], block.ridx)][:, 0, 0, :].reshape(-1)
+        return out
+
+
 def _arr(x: Any) -> np.ndarray:
     return np.asarray(x.array if hasattr(x, "array") else asnumpy(x))
 
@@ -312,6 +372,20 @@ def _precompute_left_half(lblock, op_chain):
     return (lblock.transpose(0, 2, 1).reshape(a * c, b) @ op_chain).reshape(a, c, j)
 
 
+def _thin_hop_operator(lblock, op_chain, rblock, threshold):
+    row_mask = np.any(np.abs(op_chain) > threshold, axis=1)
+    col_mask = np.any(np.abs(op_chain) > threshold, axis=0)
+    if not np.any(row_mask) or not np.any(col_mask):
+        return None
+    if np.all(row_mask) and np.all(col_mask):
+        return lblock, op_chain, rblock
+    return (
+        lblock[:, row_mask, :],
+        op_chain[np.ix_(row_mask, col_mask)],
+        rblock[:, col_mask, :],
+    )
+
+
 def _contract_hop_two_site_lhalf(left_half, rblock, cblock):
     """Contract two-site hop with precomputed ``abc,bj->acj`` left half."""
     a, c, j = left_half.shape
@@ -364,6 +438,7 @@ class BlockHop2Site:
             op1_map = _mpo_lr_blocks(_arr(mo1), op1_left_blocks, op1_right_blocks, threshold)
         else:
             op1_map = _mpo_lr_blocks_from_keys(_arr(mo1), op1_left_blocks, op1_right_blocks, op1_keys, threshold)
+        self.center_layout = CenterBlockLayout(qn_mask, mps_qn_left, mps_qn_right)
         center_map = _center_block_indices(
             mps_qn_left,
             mps_qn_right,
@@ -379,6 +454,7 @@ class BlockHop2Site:
         out_left_blocks = _qn_blocks(mps_qn_left)
         out_right_blocks = _qn_blocks(mps_qn_right)
         center_groups = {}
+        packed_center_groups = {}
         for (aqn, bqn, cqn), lblock in left_env.blocks.items():
             aidx = out_left_blocks[aqn]
             for d in range(self.cshape[1]):
@@ -396,9 +472,20 @@ class BlockHop2Site:
                                 if not op1s:
                                     continue
                                 for kqn, c_lidx, c_ridx in centers:
+                                    center_block = self.center_layout.get(cqn, e, h, kqn)
+                                    if center_block is None:
+                                        continue
                                     for jqn, _jidx, op1 in op1s:
                                         for lqn, rblock in right_by_key.get((jqn, kqn), []):
+                                            out_block = self.center_layout.get(aqn, d, g, lqn)
+                                            if out_block is None:
+                                                continue
                                             op_chain = op0 @ op1
+                                            thinned = _thin_hop_operator(lblock, op_chain, rblock, threshold)
+                                            if thinned is None:
+                                                continue
+                                            lblock_thin, op_chain_thin, rblock_thin = thinned
+                                            left_half = _precompute_left_half(lblock_thin, op_chain_thin)
                                             group_key = (id(c_lidx), e, h, id(c_ridx))
                                             group = center_groups.get(group_key)
                                             if group is None:
@@ -407,11 +494,25 @@ class BlockHop2Site:
                                             group[4].append(
                                                 (
                                                     np.ix_(aidx, [d], [g], out_right_blocks[lqn]),
-                                                    _precompute_left_half(lblock, op_chain),
-                                                    rblock,
+                                                    left_half,
+                                                    rblock_thin,
+                                                )
+                                            )
+                                            packed_key = id(center_block.vec_idx)
+                                            packed_group = packed_center_groups.get(packed_key)
+                                            if packed_group is None:
+                                                packed_group = (center_block.vec_idx, center_block.shape, [])
+                                                packed_center_groups[packed_key] = packed_group
+                                            packed_group[2].append(
+                                                (
+                                                    out_block.vec_idx,
+                                                    out_block.shape,
+                                                    left_half,
+                                                    rblock_thin,
                                                 )
                                             )
         self.center_groups = list(center_groups.values())
+        self.packed_center_groups = list(packed_center_groups.values())
 
     def __call__(self, center):
         center = _arr(center)
@@ -424,6 +525,19 @@ class BlockHop2Site:
                     rblock,
                     cblock,
                 )[:, None, None, :]
+        return out
+
+    def apply_packed(self, center_vec):
+        center_vec = np.asarray(center_vec)
+        out = np.zeros(self.center_layout.size, dtype=np.result_type(self.dtype, center_vec))
+        for c_vec_idx, c_shape, contractions in self.packed_center_groups:
+            cblock = center_vec[c_vec_idx].reshape(c_shape)
+            for out_vec_idx, out_shape, left_half, rblock in contractions:
+                out[out_vec_idx] += _contract_hop_two_site_lhalf(
+                    left_half,
+                    rblock,
+                    cblock,
+                ).reshape(out_shape).reshape(-1)
         return out
 
 

@@ -579,11 +579,14 @@ def eigh_iterative(
                 clist.append(x[:, icol])
         res = []
         for c in clist:
-            # convert c to initial structure according to qn pattern
-            cstruct = asxp(cvec2cmat(c, qn_mask))
-            cout = expr(cstruct) * inverse
-            # convert structure c to 1d according to qn
-            res.append(asnumpy(cout)[qn_mask])
+            if hasattr(expr, "apply_packed"):
+                res.append(asnumpy(expr.apply_packed(c)) * inverse)
+            else:
+                # convert c to initial structure according to qn pattern
+                cstruct = asxp(cvec2cmat(c, qn_mask))
+                cout = expr(cstruct) * inverse
+                # convert structure c to 1d according to qn
+                res.append(asnumpy(cout)[qn_mask])
 
         if len(res) == 1:
             return res[0]
