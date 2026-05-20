@@ -24,7 +24,7 @@ from renormalizer.mps.hop_expr import  hop_expr
 from renormalizer.mps.svd_qn import get_qn_mask
 from renormalizer.mps import Mpo, Mps, StackedMpo
 from renormalizer.mps.lib import Environ, cvec2cmat
-from renormalizer.mps.block_env import BlockEnvData, block_hop_expr_two_site
+from renormalizer.mps.block_env import BlockEnvData, block_hdiag_two_site, block_hop_expr_two_site
 from renormalizer.mps.oe_contract_wrap import oe_contract
 from renormalizer.utils import Quantity, CompressConfig, CompressCriteria
 
@@ -459,13 +459,34 @@ def get_ham_iterative(
     inverse = mps.optimize_config.inverse
     raw_ltensor = ltensor
     raw_rtensor = rtensor
-    if isinstance(ltensor, BlockEnvData):
-        ltensor = asxp(ltensor.to_dense())
-    if isinstance(rtensor, BlockEnvData):
-        rtensor = asxp(rtensor.to_dense())
+    use_block_hop = (
+        omega is None
+        and method == "2site"
+        and block_hop_qns is not None
+        and isinstance(raw_ltensor, BlockEnvData)
+        and isinstance(raw_rtensor, BlockEnvData)
+    )
 
     # diagonal elements of H for preconditioning
-    if omega is None:
+    if use_block_hop:
+        hdiag = block_hdiag_two_site(
+            raw_ltensor,
+            raw_rtensor,
+            cmo[0],
+            cmo[1],
+            qn_mask.shape,
+            block_hop_qns[3],
+            block_hop_qns[4],
+            block_hop_qns[5],
+            block_hop_qns[6],
+        )
+    else:
+        if isinstance(ltensor, BlockEnvData):
+            ltensor = asxp(ltensor.to_dense())
+        if isinstance(rtensor, BlockEnvData):
+            rtensor = asxp(rtensor.to_dense())
+
+    if not use_block_hop and omega is None:
         tmp_ltensor = xp.einsum("aba -> ba", ltensor)
         tmp_cmo0 = xp.einsum("abbc -> abc", cmo[0])
         tmp_rtensor = xp.einsum("aba -> ba", rtensor)
@@ -488,7 +509,7 @@ def get_ham_iterative(
             hdiag = multi_tensor_contract(
                 path, tmp_ltensor, tmp_cmo0, tmp_cmo1, tmp_rtensor
             )
-    else:
+    elif omega is not None:
         if method == "1site":
             #   S-a d h-S
             #   O-b-O-f-O
@@ -518,13 +539,7 @@ def get_ham_iterative(
 
     # contraction expression
     cshape = qn_mask.shape
-    if (
-        omega is None
-        and method == "2site"
-        and block_hop_qns is not None
-        and isinstance(raw_ltensor, BlockEnvData)
-        and isinstance(raw_rtensor, BlockEnvData)
-    ):
+    if use_block_hop:
         expr = block_hop_expr_two_site(
             raw_ltensor,
             raw_rtensor,

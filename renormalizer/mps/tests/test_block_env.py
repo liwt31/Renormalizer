@@ -17,6 +17,7 @@ from renormalizer.mps.block_env import (
     _mpo_rl_blocks_from_keys,
     _qn_blocks,
     _symbolic_mpo_nonzero_keys,
+    block_hdiag_two_site,
     block_hop_expr_two_site,
     contract_one_site_block,
 )
@@ -196,6 +197,33 @@ def test_center_block_layout_roundtrip():
     packed = block_expr.center_layout.pack(center)
     unpacked = block_expr.center_layout.unpack(packed)
     assert np.max(np.abs(unpacked[qn_mask] - center[qn_mask])) < 1e-14
+
+
+def test_block_hdiag_two_site_matches_dense():
+    mps, mpo = _toy_qc_mps_mpo(bond_dim=16)
+    mps.ensure_left_canonical()
+    mps.move_qnidx(1)
+    env = Environ(mps, mpo, use_block_env=True, block_env_min_bond_dim=0)
+    cidx = [1, 2]
+    dense_left = env.GetLR("L", cidx[0] - 1, mps, mpo, method="Enviro")
+    dense_right = env.GetLR("R", cidx[1] + 1, mps, mpo, method="Enviro")
+    tmp_left = np.einsum("aba -> ba", dense_left)
+    tmp_mo0 = np.einsum("abbc -> abc", np.asarray(mpo[cidx[0]]))
+    tmp_mo1 = np.einsum("abbc -> abc", np.asarray(mpo[cidx[1]]))
+    tmp_right = np.einsum("aba -> ba", dense_right)
+    dense_hdiag = np.einsum("ba,bce,edg,gf->acdf", tmp_left, tmp_mo0, tmp_mo1, tmp_right)
+
+    sparse_hdiag = block_hdiag_two_site(
+        env.read_raw("L", cidx[0] - 1),
+        env.read_raw("R", cidx[1] + 1),
+        mpo[cidx[0]],
+        mpo[cidx[1]],
+        dense_hdiag.shape,
+        mpo.qn[cidx[0]],
+        mpo.qn[cidx[1]],
+        mpo.qn[cidx[1] + 1],
+    )
+    assert np.max(np.abs(sparse_hdiag - dense_hdiag)) < 1e-12
 
 def test_block_env_qc_optimization_converges_to_dense_energy():
     mps0, mpo = _chain_qc_mps_mpo()

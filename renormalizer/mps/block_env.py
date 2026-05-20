@@ -50,6 +50,21 @@ class CenterBlock:
     shape: Tuple[int, int]
 
 
+@dataclass(frozen=True)
+class PackedHopConnection:
+    in_vec_idx: np.ndarray
+    in_shape: Tuple[int, int]
+    left_half: np.ndarray
+    rblock: np.ndarray
+
+
+@dataclass(frozen=True)
+class PackedOutputBlock:
+    out_vec_idx: np.ndarray
+    out_shape: Tuple[int, int]
+    connections: Tuple[PackedHopConnection, ...]
+
+
 class CenterBlockLayout:
     """Map active two-site center vector segments to QN/physical blocks."""
 
@@ -395,6 +410,90 @@ def _contract_hop_two_site_lhalf(left_half, rblock, cblock):
     return left_half.reshape(a, c * j) @ right.transpose(0, 2, 1).reshape(l, c * j).T
 
 
+def _env_diag_blocks(env: BlockEnvData):
+    by_mpo_qn = defaultdict(list)
+    qn_blocks = _qn_blocks(env.bra_qn)
+    for (bra_qn, mpo_qn, ket_qn), block in env.blocks.items():
+        if bra_qn != ket_qn:
+            continue
+        idx = qn_blocks[bra_qn]
+        diag = block[np.arange(len(idx)), :, np.arange(len(idx))]
+        by_mpo_qn[mpo_qn].append((bra_qn, idx, diag))
+    return by_mpo_qn
+
+
+def _mpo_diag_chains(mo0, mo1, mpo_qn_left, mpo_qn_mid, mpo_qn_right, phys0: int, phys1: int, threshold: float):
+    mo0 = _arr(mo0)
+    mo1 = _arr(mo1)
+    left_blocks = _qn_blocks(mpo_qn_left)
+    mid_blocks = _qn_blocks(mpo_qn_mid)
+    right_blocks = _qn_blocks(mpo_qn_right)
+    chains = {}
+    for bqn, bidx in left_blocks.items():
+        for c in range(phys0):
+            for eqn, eidx in mid_blocks.items():
+                w0 = mo0[np.ix_(bidx, [c], [c], eidx)][:, 0, 0, :]
+                if not _nonzero(w0, threshold):
+                    continue
+                for d in range(phys1):
+                    for gqn, gidx in right_blocks.items():
+                        w1 = mo1[np.ix_(eidx, [d], [d], gidx)][:, 0, 0, :]
+                        if not _nonzero(w1, threshold):
+                            continue
+                        key = (bqn, c, d, gqn)
+                        chain = w0 @ w1
+                        if key in chains:
+                            chains[key] += chain
+                        else:
+                            chains[key] = chain.copy()
+    return chains
+
+
+def block_hdiag_two_site(
+    left_env: BlockEnvData,
+    right_env: BlockEnvData,
+    mo0,
+    mo1,
+    cshape,
+    mpo_qn_left,
+    mpo_qn_mid,
+    mpo_qn_right,
+    threshold: float = 1e-14,
+):
+    """Block-sparse two-site effective-Hamiltonian diagonal.
+
+    This computes the same tensor as the dense path
+    ``L[a,b,a] W0[b,c,c,e] W1[e,d,d,g] R[f,g,f]``.
+    """
+    if not isinstance(left_env, BlockEnvData) or not isinstance(right_env, BlockEnvData):
+        raise TypeError("block_hdiag_two_site requires block-sparse left and right environments")
+    cshape = tuple(cshape)
+    dtype = np.result_type(left_env.dtype, right_env.dtype, _arr(mo0), _arr(mo1))
+    hdiag = np.zeros(cshape, dtype=dtype)
+    left_diag_by_mpo = _env_diag_blocks(left_env)
+    right_diag_by_mpo = _env_diag_blocks(right_env)
+    chains = _mpo_diag_chains(
+        mo0,
+        mo1,
+        mpo_qn_left,
+        mpo_qn_mid,
+        mpo_qn_right,
+        cshape[1],
+        cshape[2],
+        threshold,
+    )
+    for (bqn, c, d, gqn), chain in chains.items():
+        left_items = left_diag_by_mpo.get(bqn, [])
+        right_items = right_diag_by_mpo.get(gqn, [])
+        if not left_items or not right_items:
+            continue
+        for _aqn, aidx, left_diag in left_items:
+            left_chain = left_diag @ chain
+            for _fqn, fidx, right_diag in right_items:
+                hdiag[np.ix_(aidx, [c], [d], fidx)] += (left_chain @ right_diag.T)[:, None, None, :]
+    return hdiag
+
+
 class BlockHop2Site:
     """QN-block sparse two-site effective-Hamiltonian matvec.
 
@@ -454,7 +553,7 @@ class BlockHop2Site:
         out_left_blocks = _qn_blocks(mps_qn_left)
         out_right_blocks = _qn_blocks(mps_qn_right)
         center_groups = {}
-        packed_center_groups = {}
+        packed_output_groups = {}
         for (aqn, bqn, cqn), lblock in left_env.blocks.items():
             aidx = out_left_blocks[aqn]
             for d in range(self.cshape[1]):
@@ -498,21 +597,24 @@ class BlockHop2Site:
                                                     rblock_thin,
                                                 )
                                             )
-                                            packed_key = id(center_block.vec_idx)
-                                            packed_group = packed_center_groups.get(packed_key)
+                                            packed_key = id(out_block.vec_idx)
+                                            packed_group = packed_output_groups.get(packed_key)
                                             if packed_group is None:
-                                                packed_group = (center_block.vec_idx, center_block.shape, [])
-                                                packed_center_groups[packed_key] = packed_group
+                                                packed_group = (out_block.vec_idx, out_block.shape, [])
+                                                packed_output_groups[packed_key] = packed_group
                                             packed_group[2].append(
-                                                (
-                                                    out_block.vec_idx,
-                                                    out_block.shape,
+                                                PackedHopConnection(
+                                                    center_block.vec_idx,
+                                                    center_block.shape,
                                                     left_half,
                                                     rblock_thin,
                                                 )
                                             )
         self.center_groups = list(center_groups.values())
-        self.packed_center_groups = list(packed_center_groups.values())
+        self.packed_output_groups = [
+            PackedOutputBlock(out_vec_idx, out_shape, tuple(connections))
+            for out_vec_idx, out_shape, connections in packed_output_groups.values()
+        ]
 
     def __call__(self, center):
         center = _arr(center)
@@ -530,14 +632,16 @@ class BlockHop2Site:
     def apply_packed(self, center_vec):
         center_vec = np.asarray(center_vec)
         out = np.zeros(self.center_layout.size, dtype=np.result_type(self.dtype, center_vec))
-        for c_vec_idx, c_shape, contractions in self.packed_center_groups:
-            cblock = center_vec[c_vec_idx].reshape(c_shape)
-            for out_vec_idx, out_shape, left_half, rblock in contractions:
-                out[out_vec_idx] += _contract_hop_two_site_lhalf(
-                    left_half,
-                    rblock,
+        for out_group in self.packed_output_groups:
+            out_block = np.zeros(out_group.out_shape, dtype=out.dtype)
+            for conn in out_group.connections:
+                cblock = center_vec[conn.in_vec_idx].reshape(conn.in_shape)
+                out_block += _contract_hop_two_site_lhalf(
+                    conn.left_half,
+                    conn.rblock,
                     cblock,
-                ).reshape(out_shape).reshape(-1)
+                ).reshape(out_group.out_shape)
+            out[out_group.out_vec_idx] += out_block.reshape(-1)
         return out
 
 
