@@ -37,3 +37,29 @@ def test_expm(N, imag, block_size):
     res1 = x @ np.diag(np.exp(w)) @ x.conj().T @ v
     res2, _ = expm_krylov(lambda x: a2.dot(x), 1, xp.array(v), block_size)
     assert xp.allclose(res1, res2)
+
+
+@pytest.mark.parametrize("imag", (True, False))
+def test_expm_env_init(imag, monkeypatch):
+    # RENO_KRYLOV_INIT shrinks the upfront allocation and forces the
+    # basis-growth branch; numerics must be identical to the default run
+    N, block_size = 200, 30
+    a1 = np.random.rand(N, N) / N
+    if imag:
+        a1 = a1 + np.random.rand(N, N) / N / 1j
+    a1 += a1.T.conj()
+
+    a2 = xp.array(a1)
+    v = np.random.rand(N)
+    if imag:
+        v = v + v / 1j
+    w, x = eigh(a1)
+    res1 = x @ np.diag(np.exp(w)) @ x.conj().T @ v
+
+    monkeypatch.setenv("RENO_KRYLOV_INIT", "2")
+    res2, _ = expm_krylov(lambda x: a2.dot(x), 1, xp.array(v), block_size)
+    assert xp.allclose(res1, res2)
+
+    monkeypatch.delenv("RENO_KRYLOV_INIT")
+    res3, _ = expm_krylov(lambda x: a2.dot(x), 1, xp.array(v), block_size)
+    assert xp.allclose(res2, res3)

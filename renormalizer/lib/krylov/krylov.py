@@ -2,6 +2,7 @@
 # adopted from https://github.com/cmendl/pytenet/blob/master/pytenet/krylov.py
 
 import logging
+import os
 
 from scipy.linalg import eigh_tridiagonal
 import numpy as np
@@ -10,6 +11,25 @@ from renormalizer.mps.backend import xp
 
 
 logger = logging.getLogger(__name__)
+
+
+def _initial_block_size(block_size: int) -> int:
+    """Number of Krylov vectors allocated upfront.
+
+    The Krylov basis grows in chunks of ``block_size`` when exhausted, so the
+    initial allocation only affects peak memory, not the numerical result.
+    Override with the ``RENO_KRYLOV_INIT`` environment variable (positive
+    integer). Default: ``block_size`` (preserve the original behavior).
+    """
+    try:
+        n = int(os.environ.get("RENO_KRYLOV_INIT", "0"))
+    except ValueError:
+        logger.warning(f"Invalid RENO_KRYLOV_INIT={os.environ.get('RENO_KRYLOV_INIT')!r}, "
+                       f"falling back to block_size={block_size}")
+        n = 0
+    if n <= 0:
+        return block_size
+    return min(n, block_size)
 
 
 def _expm_krylov(alpha, beta, V, v_norm, dt):
@@ -30,6 +50,13 @@ def expm_krylov(Afunc, dt, vstart: xp.ndarray, block_size=50):
     Compute Krylov subspace approximation of the matrix exponential
     applied to input vector: `expm(dt*A)*v`.
     A is a hermitian matrix.
+
+    The Krylov basis is allocated upfront with `_initial_block_size(block_size)`
+    vectors and grows in chunks of `block_size` when exhausted. Set the
+    `RENO_KRYLOV_INIT` environment variable to shrink the upfront allocation
+    (e.g. for large TTNS nodes where `block_size` vectors do not fit in GPU
+    memory). Numerics are unaffected.
+
     Reference:
         M. Hochbruck and C. Lubich
         On Krylov subspace approximations to the matrix exponential operator
@@ -47,7 +74,7 @@ def expm_krylov(Afunc, dt, vstart: xp.ndarray, block_size=50):
     alpha = np.zeros(block_size)
     beta  = np.zeros(block_size - 1)
 
-    V = xp.empty((block_size, len(vstart)), dtype=vstart.dtype)
+    V = xp.empty((_initial_block_size(block_size), len(vstart)), dtype=vstart.dtype)
     V[0] = vstart
     res = None
 
